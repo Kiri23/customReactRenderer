@@ -104,8 +104,24 @@ function containerToLatex(container) {
   function walk(node) {
     if (typeof node === "string") return node;
 
+    // Handle React elements (function components)
+    if (node && node.$$typeof && node.type) {
+      // If it's a function component, call it with props and walk its output
+      if (typeof node.type === "function") {
+        const rendered = node.type(node.props);
+        return walk(rendered);
+      }
+      // Handle React.Fragment
+      if (node.type === React.Fragment) {
+        const fragChildren = node.props.children || [];
+        return Array.isArray(fragChildren)
+          ? fragChildren.map(walk).join("")
+          : walk(fragChildren);
+      }
+    }
+
     const { type, props, children } = node;
-    const childLatex = children.map(walk).join("");
+    const childLatex = (children || []).map(walk).join("");
 
     // Convert React elements to LaTeX commands
     switch (type) {

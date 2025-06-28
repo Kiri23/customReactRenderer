@@ -2,111 +2,70 @@ const React = require("react");
 const { useLatexConfig } = require("../contexts/LatexConfigContext");
 
 // Basic TikZ shapes
-const TikZCircle = ({ x = 0, y = 0, radius = 1, options = "", ...props }) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzcircle", {
-    x,
-    y,
-    radius,
-    options: tikzOptions,
-    ...props,
-  });
-};
+const TikZCircle = ({ x = 0, y = 0, radius = 1, options = "", ...props }) =>
+  React.createElement("tikzcircle", { x, y, radius, options, ...props });
 
 const TikZRectangle = ({
   x = 0,
   y = 0,
-  width = 2,
+  width = 1,
   height = 1,
   options = "",
   ...props
-}) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzrectangle", {
+}) =>
+  React.createElement("tikzrectangle", {
     x,
     y,
     width,
     height,
-    options: tikzOptions,
+    options,
     ...props,
   });
-};
 
-const TikZLine = ({ from = [0, 0], to = [2, 0], options = "", ...props }) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzline", {
-    from,
-    to,
-    options: tikzOptions,
-    ...props,
-  });
-};
+const TikZLine = ({ from = [0, 0], to = [1, 1], options = "", ...props }) =>
+  React.createElement("tikzline", { from, to, options, ...props });
 
-const TikZArrow = ({
-  from = [0, 0],
-  to = [2, 0],
-  options = "->",
-  ...props
-}) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzarrow", {
-    from,
-    to,
-    options: tikzOptions,
-    ...props,
-  });
-};
+const TikZArrow = ({ from = [0, 0], to = [1, 1], options = "->", ...props }) =>
+  React.createElement("tikzarrow", { from, to, options, ...props });
 
-const TikZNode = ({ x = 0, y = 0, text = "", options = "", ...props }) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikznode", {
-    x,
-    y,
-    text,
-    options: tikzOptions,
-    ...props,
-  });
-};
+const TikZNode = ({ x = 0, y = 0, text = "", options = "", ...props }) =>
+  React.createElement("tikznode", { x, y, text, options, ...props });
 
 const TikZGrid = ({
   xmin = 0,
   ymin = 0,
-  xmax = 4,
-  ymax = 4,
+  xmax = 1,
+  ymax = 1,
   step = 1,
   options = "",
   ...props
-}) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzgrid", {
+}) =>
+  React.createElement("tikzgrid", {
     xmin,
     ymin,
     xmax,
     ymax,
     step,
-    options: tikzOptions,
+    options,
     ...props,
   });
-};
 
 const TikZAxis = ({
   xmin = 0,
   ymin = 0,
-  xmax = 4,
-  ymax = 4,
+  xmax = 1,
+  ymax = 1,
   options = "",
   ...props
-}) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzaxis", {
+}) =>
+  React.createElement("tikzaxis", {
     xmin,
     ymin,
     xmax,
     ymax,
-    options: tikzOptions,
+    options,
     ...props,
   });
-};
 
 // Complex TikZ diagrams
 const TikZFlowchart = ({ children, ...props }) =>
@@ -119,32 +78,23 @@ const TikZFlowchartNode = ({
   shape = "rectangle",
   options = "",
   ...props
-}) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzflowchartnode", {
+}) =>
+  React.createElement("tikzflowchartnode", {
     x,
     y,
     text,
     shape,
-    options: tikzOptions,
+    options,
     ...props,
   });
-};
 
 const TikZFlowchartArrow = ({
   from = [0, 0],
-  to = [2, 0],
+  to = [1, 1],
   options = "->",
   ...props
-}) => {
-  const tikzOptions = options ? `[${options}]` : "";
-  return React.createElement("tikzflowchartarrow", {
-    from,
-    to,
-    options: tikzOptions,
-    ...props,
-  });
-};
+}) =>
+  React.createElement("tikzflowchartarrow", { from, to, options, ...props });
 
 // TikZ Diagram container
 const TikZDiagram = ({ children, width = "8cm", height = "6cm", ...props }) =>
@@ -153,11 +103,9 @@ const TikZDiagram = ({ children, width = "8cm", height = "6cm", ...props }) =>
 // Conditional TikZ components
 const ConditionalTikZ = ({ children, ...props }) => {
   const { isVisible } = useLatexConfig();
-
   if (!isVisible("showDiagrams")) {
     return null;
   }
-
   return <TikZDiagram {...props}>{children}</TikZDiagram>;
 };
 

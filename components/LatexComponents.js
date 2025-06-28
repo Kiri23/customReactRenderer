@@ -5,8 +5,8 @@ const { useLatexConfig } = require("../contexts/LatexConfigContext");
 const Document = ({ children, ...props }) =>
   React.createElement("document", props, children);
 
-const Section = ({ children, title, ...props }) =>
-  React.createElement("section", props, title || children);
+const Section = ({ title, children }) =>
+  React.createElement("section", null, [title, children]);
 
 const Subsection = ({ children, title, ...props }) =>
   React.createElement("subsection", props, title || children);

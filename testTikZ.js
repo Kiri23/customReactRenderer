@@ -1,7 +1,18 @@
 const React = require("react");
 const Reconciler = require("react-reconciler");
 const fs = require("fs");
-const SimpleTikZExample = require("./examples/SimpleTikZExample");
+const {
+  TikZDiagram,
+  TikZCircle,
+  TikZRectangle,
+  TikZLine,
+  TikZNode,
+} = require("./components/TikZComponents");
+const {
+  Document,
+  Section,
+  Paragraph,
+} = require("./components/LatexComponents");
 
 // Host config for a LaTeX renderer
 const hostConfig = {
@@ -102,9 +113,10 @@ function renderToLatex(element) {
 function containerToLatex(container) {
   function walk(node) {
     if (typeof node === "string") return node;
-
+    if (!node) return "";
     const { type, props, children } = node;
     const childLatex = children.map(walk).join("");
+    console.log("[DEBUG] walk node type:", type, "props:", props);
 
     // Convert React elements to LaTeX commands
     switch (type) {
@@ -145,6 +157,27 @@ function containerToLatex(container) {
 
   return container.children.map(walk).join("");
 }
+
+const SimpleTikZExample = () => (
+  <Document>
+    <Section title="Simple TikZ Example">
+      <Paragraph>This is a simple TikZ diagram example.</Paragraph>
+      <TikZDiagram width="8cm" height="6cm">
+        <TikZCircle x={2} y={2} radius={1} options="fill=blue!20, draw=blue" />
+        <TikZRectangle
+          x={4}
+          y={4}
+          width={1.5}
+          height={1}
+          options="fill=red!20, draw=red"
+        />
+        <TikZLine from={[1, 1]} to={[5, 5]} options="thick, green" />
+        <TikZNode x={2} y={3.5} text="Circle" options="above" />
+        <TikZNode x={4.75} y={4.5} text="Rectangle" options="above" />
+      </TikZDiagram>
+    </Section>
+  </Document>
+);
 
 // Test the simple TikZ example
 const output = renderToLatex(<SimpleTikZExample />);
