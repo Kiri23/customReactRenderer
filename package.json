@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "start": "babel-node index.jsx"
+    "start": "babel-node index.jsx",
+    "latex": "babel-node latexRenderer.js"
   },
   "dependencies": {
     "react": "^18.2.0",

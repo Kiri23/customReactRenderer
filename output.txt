@@ -1,2 +1,2 @@
 Hello, world!
-This is a custom renderer. from jsx
+This is a custom renderer with JSX.
