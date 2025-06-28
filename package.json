@@ -1,0 +1,17 @@
+{
+  "name": "custom-react-renderer",
+  "version": "1.0.0",
+  "description": "Custom React renderer that writes to text files",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-reconciler": "^0.29.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-react": "^7.22.0"
+  }
+} 
