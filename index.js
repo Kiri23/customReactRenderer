@@ -99,6 +99,7 @@ function renderToText(element) {
 }
 
 function containerToString(container) {
+  console.log(container);
   function walk(node) {
     if (typeof node === "string") return node;
     let children = node.children.map(walk).join("");

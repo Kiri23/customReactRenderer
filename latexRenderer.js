@@ -1,6 +1,7 @@
 const React = require("react");
 const Reconciler = require("react-reconciler");
 const fs = require("fs");
+const DynamicDocumentExample = require("./examples/DynamicDocument");
 
 // Host config for a LaTeX renderer
 const hostConfig = {
@@ -108,7 +109,7 @@ function containerToLatex(container) {
     // Convert React elements to LaTeX commands
     switch (type) {
       case "document":
-        return `\\documentclass{article}\n\\begin{document}\n\n${childLatex}\n\n\\end{document}`;
+        return `\\documentclass{article}\n\\usepackage{amsmath}\n\\usepackage{amsfonts}\n\\usepackage{amssymb}\n\\usepackage{graphicx}\n\\usepackage{tikz}\n\\begin{document}\n\n${childLatex}\n\n\\end{document}`;
       case "section":
         return `\\section{${childLatex}}\n\n`;
       case "subsection":
@@ -126,7 +127,8 @@ function containerToLatex(container) {
       case "displaymath":
         return `\\[${childLatex}\\]`;
       case "equation":
-        return `\\begin{equation}\n${childLatex}\n\\end{equation}\n\n`;
+        const label = props?.label ? `\\label{${props.label}}` : "";
+        return `\\begin{equation}${label}\n${childLatex}\n\\end{equation}\n\n`;
       case "itemize":
         return `\\begin{itemize}\n${childLatex}\\end{itemize}\n\n`;
       case "enumerate":
@@ -134,10 +136,11 @@ function containerToLatex(container) {
       case "item":
         return `\\item ${childLatex}\n`;
       case "table":
-        return `\\begin{table}\n${childLatex}\\end{table}\n\n`;
+        const caption = props?.caption ? `\\caption{${props.caption}}` : "";
+        return `\\begin{table}[h]\n\\centering\n${caption}\n${childLatex}\\end{table}\n\n`;
       case "tabular":
         return `\\begin{tabular}{${
-          props.align || "l"
+          props?.align || "l"
         }}\n${childLatex}\\end{tabular}`;
       case "tr":
         return `${childLatex} \\\\\n`;
@@ -157,38 +160,59 @@ function containerToLatex(container) {
   return container.children.map(walk).join("");
 }
 
-// Example usage with LaTeX components
-const LatexDocument = () => (
-  <document>
-    <section>Introduction to LaTeX</section>
-    <paragraph>
-      This is a <bold>bold text</bold> and this is <italic>italic text</italic>.
-    </paragraph>
+// Example usage with different configurations
+const configs = {
+  full: {
+    showMath: true,
+    showTables: true,
+    showLists: true,
+    showExamples: true,
+    showAbstract: true,
+    showKeywords: true,
+    showReferences: true,
+  },
+  minimal: {
+    showMath: false,
+    showTables: false,
+    showLists: false,
+    showExamples: false,
+    showAbstract: false,
+    showKeywords: false,
+    showReferences: false,
+  },
+  mathOnly: {
+    showMath: true,
+    showTables: false,
+    showLists: false,
+    showExamples: false,
+    showAbstract: true,
+    showKeywords: true,
+    showReferences: true,
+  },
+};
 
-    <subsection>Mathematical Expressions</subsection>
-    <paragraph>
-      Here's an inline math expression: <math>E = mc^2</math>
-    </paragraph>
+console.log("=== Generating LaTeX with different configurations ===\n");
 
-    <equation>
-      {"\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}"}
-    </equation>
-
-    <subsection>Lists</subsection>
-    <itemize>
-      <item>First item</item>
-      <item>Second item</item>
-      <item>Third item</item>
-    </itemize>
-
-    <enumerate>
-      <item>Numbered item 1</item>
-      <item>Numbered item 2</item>
-    </enumerate>
-  </document>
+// Generate full document
+const fullOutput = renderToLatex(
+  <DynamicDocumentExample initialConfig={configs.full} />,
 );
+fs.writeFileSync("output-full.tex", fullOutput);
+console.log("Full document written to output-full.tex");
 
-const output = renderToLatex(<LatexDocument />);
-fs.writeFileSync("output.tex", output);
-console.log("LaTeX output written to output.tex:");
-console.log(output);
+// Generate minimal document
+const minimalOutput = renderToLatex(
+  <DynamicDocumentExample initialConfig={configs.minimal} />,
+);
+fs.writeFileSync("output-minimal.tex", minimalOutput);
+console.log("Minimal document written to output-minimal.tex");
+
+// Generate math-only document
+const mathOutput = renderToLatex(
+  <DynamicDocumentExample initialConfig={configs.mathOnly} />,
+);
+fs.writeFileSync("output-math.tex", mathOutput);
+console.log("Math-only document written to output-math.tex");
+
+console.log("\n=== Sample output (full document) ===");
+console.log(fullOutput);
