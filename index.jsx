@@ -38,12 +38,10 @@ const hostConfig = {
     // Not needed for this simple renderer
   },
   removeChild(parentInstance, child) {
-    parentInstance.children = parentInstance.children.filter(
-      (c) => c !== child,
-    );
+    parentInstance.children = parentInstance.children.filter(c => c !== child);
   },
   removeChildFromContainer(container, child) {
-    container.children = container.children.filter((c) => c !== child);
+    container.children = container.children.filter(c => c !== child);
   },
   shouldSetTextContent(type, props) {
     return false;
@@ -107,17 +105,15 @@ function containerToString(container) {
   return container.children.map(walk).join("");
 }
 
-// Example usage
-const App = () =>
-  React.createElement(
-    "div",
-    null,
-    "Hello, ",
-    React.createElement("span", null, "world!"),
-    "\nThis is a custom renderer.",
-  );
+// Example usage with JSX
+const App = () => (
+  <div>
+    Hello, <span>world!</span>
+    {"\nThis is a custom renderer with JSX."}
+  </div>
+);
 
-const output = renderToText(React.createElement(App));
+const output = renderToText(<App />);
 fs.writeFileSync("output.txt", output);
 console.log("Rendered output written to output.txt:");
 console.log(output);
