@@ -1,8 +1,7 @@
 const React = require("react");
 const Reconciler = require("react-reconciler");
 const fs = require("fs");
-const DynamicDocumentExample = require("./examples/DynamicDocument");
-const TikZExamplesDocument = require("./examples/TikZExamples");
+const SimpleTikZExample = require("./examples/SimpleTikZExample");
 
 // Host config for a LaTeX renderer
 const hostConfig = {
@@ -113,46 +112,8 @@ function containerToLatex(container) {
         return `\\documentclass{article}\n\\usepackage{amsmath}\n\\usepackage{amsfonts}\n\\usepackage{amssymb}\n\\usepackage{graphicx}\n\\usepackage{tikz}\n\\usepackage{pgfplots}\n\\pgfplotsset{compat=1.18}\n\\begin{document}\n\n${childLatex}\n\n\\end{document}`;
       case "section":
         return `\\section{${childLatex}}\n\n`;
-      case "subsection":
-        return `\\subsection{${childLatex}}\n\n`;
       case "paragraph":
         return `${childLatex}\n\n`;
-      case "bold":
-        return `\\textbf{${childLatex}}`;
-      case "italic":
-        return `\\textit{${childLatex}}`;
-      case "underline":
-        return `\\underline{${childLatex}}`;
-      case "math":
-        return `$${childLatex}$`;
-      case "displaymath":
-        return `\\[${childLatex}\\]`;
-      case "equation":
-        const label = props?.label ? `\\label{${props.label}}` : "";
-        return `\\begin{equation}${label}\n${childLatex}\n\\end{equation}\n\n`;
-      case "itemize":
-        return `\\begin{itemize}\n${childLatex}\\end{itemize}\n\n`;
-      case "enumerate":
-        return `\\begin{enumerate}\n${childLatex}\\end{enumerate}\n\n`;
-      case "item":
-        return `\\item ${childLatex}\n`;
-      case "table":
-        const caption = props?.caption ? `\\caption{${props.caption}}` : "";
-        return `\\begin{table}[h]\n\\centering\n${caption}\n${childLatex}\\end{table}\n\n`;
-      case "tabular":
-        return `\\begin{tabular}{${
-          props?.align || "l"
-        }}\n${childLatex}\\end{tabular}`;
-      case "tr":
-        return `${childLatex} \\\\\n`;
-      case "td":
-        return `${childLatex} & `;
-      case "p":
-        return `${childLatex}\n\n`;
-      case "div":
-        return `${childLatex}\n`;
-      case "span":
-        return childLatex;
 
       // TikZ Components
       case "tikzdiagram":
@@ -174,32 +135,8 @@ function containerToLatex(container) {
         const { from, to } = props;
         return `\\draw${props.options} (${from[0]},${from[1]}) -- (${to[0]},${to[1]});\n`;
 
-      case "tikzarrow":
-        const { from: arrowFrom, to: arrowTo } = props;
-        return `\\draw${props.options} (${arrowFrom[0]},${arrowFrom[1]}) -- (${arrowTo[0]},${arrowTo[1]});\n`;
-
       case "tikznode":
         return `\\node${props.options} at (${props.x},${props.y}) {${props.text}};\n`;
-
-      case "tikzgrid":
-        const { xmin, ymin, xmax, ymax, step } = props;
-        return `\\draw[step=${step}cm] (${xmin},${ymin}) grid (${xmax},${ymax});\n`;
-
-      case "tikzaxis":
-        const { xmin: axmin, ymin: aymin, xmax: axmax, ymax: aymax } = props;
-        return `\\draw[->] (${axmin},0) -- (${axmax},0) node[right] {$x$};\n\\draw[->] (0,${aymin}) -- (0,${aymax}) node[above] {$y$};\n`;
-
-      case "tikzflowchart":
-        return `\\begin{tikzpicture}[node distance=2cm]\n${childLatex}\n\\end{tikzpicture}\n\n`;
-
-      case "tikzflowchartnode":
-        const { shape: nodeShape, text: nodeText } = props;
-        const shapeCmd = nodeShape === "circle" ? "circle" : "rectangle";
-        return `\\node[${shapeCmd}, draw] (${props.x},${props.y}) {${nodeText}};\n`;
-
-      case "tikzflowchartarrow":
-        const { from: flowFrom, to: flowTo } = props;
-        return `\\draw${props.options} (${flowFrom[0]},${flowFrom[1]}) -- (${flowTo[0]},${flowTo[1]});\n`;
 
       default:
         return childLatex;
@@ -209,64 +146,9 @@ function containerToLatex(container) {
   return container.children.map(walk).join("");
 }
 
-// Example usage with different configurations
-const configs = {
-  full: {
-    showMath: true,
-    showTables: true,
-    showLists: true,
-    showExamples: true,
-    showAbstract: true,
-    showKeywords: true,
-    showReferences: true,
-  },
-  minimal: {
-    showMath: false,
-    showTables: false,
-    showLists: false,
-    showExamples: false,
-    showAbstract: false,
-    showKeywords: false,
-    showReferences: false,
-  },
-  mathOnly: {
-    showMath: true,
-    showTables: false,
-    showLists: false,
-    showExamples: false,
-    showAbstract: true,
-    showKeywords: true,
-    showReferences: true,
-  },
-};
-
-console.log("=== Generating LaTeX with different configurations ===\n");
-
-// Generate full document
-const fullOutput = renderToLatex(
-  <DynamicDocumentExample initialConfig={configs.full} />,
-);
-fs.writeFileSync("output-full.tex", fullOutput);
-console.log("Full document written to output-full.tex");
-
-// Generate minimal document
-const minimalOutput = renderToLatex(
-  <DynamicDocumentExample initialConfig={configs.minimal} />,
-);
-fs.writeFileSync("output-minimal.tex", minimalOutput);
-console.log("Minimal document written to output-minimal.tex");
-
-// Generate math-only document
-const mathOutput = renderToLatex(
-  <DynamicDocumentExample initialConfig={configs.mathOnly} />,
-);
-fs.writeFileSync("output-math.tex", mathOutput);
-console.log("Math-only document written to output-math.tex");
-
-// Generate TikZ examples document
-const tikzOutput = renderToLatex(<TikZExamplesDocument />);
-fs.writeFileSync("output-tikz.tex", tikzOutput);
-console.log("TikZ examples document written to output-tikz.tex");
-
-console.log("\n=== Sample output (TikZ document) ===");
-console.log(tikzOutput);
+// Test the simple TikZ example
+const output = renderToLatex(<SimpleTikZExample />);
+fs.writeFileSync("simple-tikz.tex", output);
+console.log("Simple TikZ example written to simple-tikz.tex");
+console.log("\n=== Output ===");
+console.log(output);

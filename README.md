@@ -1,6 +1,6 @@
 # React-to-LaTeX Renderer
 
-A custom React renderer that converts React components to LaTeX code using React Reconciler. This project demonstrates how to create a custom renderer that supports all React features including hooks, context, and conditional rendering.
+A custom React renderer that converts React components to LaTeX code using React Reconciler. This project demonstrates how to create a custom renderer that supports all React features including hooks, context, and conditional rendering. Created by Cursor.
 
 ## 🚀 Features
 
