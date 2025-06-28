@@ -1,0 +1,8 @@
+# Custom React Renderer Rules
+
+- ALWAYS keep both index.js and index.jsx files
+- index.js should contain the original React.createElement version
+- index.jsx should contain the JSX version
+- NEVER delete either file
+- Both files should be functional and working
+- When making changes, update both files accordingly 

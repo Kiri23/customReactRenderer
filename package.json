@@ -4,7 +4,8 @@
   "description": "Custom React renderer that writes to text files",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "start": "babel-node index.jsx"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -12,6 +13,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
+    "@babel/node": "^7.27.1",
     "@babel/preset-react": "^7.22.0"
   }
-} 
+}
