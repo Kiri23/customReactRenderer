@@ -127,10 +127,29 @@ function containerToLatex(container) {
     switch (type) {
       case "document":
         return `\\documentclass{article}\n\\usepackage{amsmath}\n\\usepackage{amsfonts}\n\\usepackage{amssymb}\n\\usepackage{graphicx}\n\\usepackage{tikz}\n\\usepackage{pgfplots}\n\\pgfplotsset{compat=1.18}\n\\begin{document}\n\n${childLatex}\n\n\\end{document}`;
-      case "section":
-        return `\\section{${childLatex}}\n\n`;
-      case "subsection":
-        return `\\subsection{${childLatex}}\n\n`;
+      case "section": {
+        // Expect children: [title, ...content]
+        let title = "";
+        let content = "";
+        if (Array.isArray(children) && children.length > 0) {
+          title = walk(children[0]);
+          content = children.slice(1).map(walk).join("");
+        } else {
+          title = childLatex;
+        }
+        return `\\section{${title}}\n${content}\n`;
+      }
+      case "subsection": {
+        let title = "";
+        let content = "";
+        if (Array.isArray(children) && children.length > 0) {
+          title = walk(children[0]);
+          content = children.slice(1).map(walk).join("");
+        } else {
+          title = childLatex;
+        }
+        return `\\subsection{${title}}\n${content}\n`;
+      }
       case "paragraph":
         return `${childLatex}\n\n`;
       case "bold":
@@ -172,50 +191,78 @@ function containerToLatex(container) {
 
       // TikZ Components
       case "tikzdiagram":
-        const width = props?.width || "8cm";
-        const height = props?.height || "6cm";
         return `\\begin{figure}[h]\n\\centering\n\\begin{tikzpicture}[scale=1]\n${childLatex}\n\\end{tikzpicture}\n\\end{figure}\n\n`;
 
-      case "tikzcircle":
+      case "tikzcircle": {
         const { x, y, radius, options } = props;
-        return `\\draw${options} (${x},${y}) circle (${radius}cm);\n`;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt} (${x},${y}) circle (${radius}cm);\n`;
+      }
 
-      case "tikzrectangle":
-        const { width: rectWidth, height: rectHeight } = props;
-        return `\\draw${props.options} (${props.x},${props.y}) rectangle (${
-          props.x + rectWidth
-        },${props.y + rectHeight});\n`;
+      case "tikzrectangle": {
+        const { x, y, width: rectWidth, height: rectHeight, options } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt} (${x},${y}) rectangle (${x + rectWidth},${
+          y + rectHeight
+        });\n`;
+      }
 
-      case "tikzline":
-        const { from, to } = props;
-        return `\\draw${props.options} (${from[0]},${from[1]}) -- (${to[0]},${to[1]});\n`;
+      case "tikzline": {
+        const { from, to, options } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt} (${from[0]},${from[1]}) -- (${to[0]},${to[1]});\n`;
+      }
 
-      case "tikzarrow":
-        const { from: arrowFrom, to: arrowTo } = props;
-        return `\\draw${props.options} (${arrowFrom[0]},${arrowFrom[1]}) -- (${arrowTo[0]},${arrowTo[1]});\n`;
+      case "tikzarrow": {
+        const { from: arrowFrom, to: arrowTo, options } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt} (${arrowFrom[0]},${arrowFrom[1]}) -- (${arrowTo[0]},${arrowTo[1]});\n`;
+      }
 
-      case "tikznode":
-        return `\\node${props.options} at (${props.x},${props.y}) {${props.text}};\n`;
+      case "tikznode": {
+        const { x, y, text, options } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\node${opt} at (${x},${y}) {${text}};\n`;
+      }
 
-      case "tikzgrid":
-        const { xmin, ymin, xmax, ymax, step } = props;
-        return `\\draw[step=${step}cm] (${xmin},${ymin}) grid (${xmax},${ymax});\n`;
+      case "tikzgrid": {
+        const { xmin, ymin, xmax, ymax, step, options } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt}[step=${step}cm] (${xmin},${ymin}) grid (${xmax},${ymax});\n`;
+      }
 
-      case "tikzaxis":
-        const { xmin: axmin, ymin: aymin, xmax: axmax, ymax: aymax } = props;
-        return `\\draw[->] (${axmin},0) -- (${axmax},0) node[right] {$x$};\n\\draw[->] (0,${aymin}) -- (0,${aymax}) node[above] {$y$};\n`;
+      case "tikzaxis": {
+        const {
+          xmin: axmin,
+          ymin: aymin,
+          xmax: axmax,
+          ymax: aymax,
+          options,
+        } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt} [->] (${axmin},0) -- (${axmax},0) node[right] {$x$};\n\\draw${opt} [->] (0,${aymin}) -- (0,${aymax}) node[above] {$y$};\n`;
+      }
 
       case "tikzflowchart":
         return `\\begin{tikzpicture}[node distance=2cm]\n${childLatex}\n\\end{tikzpicture}\n\n`;
 
-      case "tikzflowchartnode":
-        const { shape: nodeShape, text: nodeText } = props;
-        const shapeCmd = nodeShape === "circle" ? "circle" : "rectangle";
-        return `\\node[${shapeCmd}, draw] (${props.x},${props.y}) {${nodeText}};\n`;
+      case "tikzflowchartnode": {
+        const { x, y, text: nodeText, shape: nodeShape, options } = props;
+        const shapeCmd =
+          nodeShape === "circle"
+            ? "circle"
+            : nodeShape === "diamond"
+            ? "diamond"
+            : "rectangle";
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\node${opt}[${shapeCmd}, draw] at (${x},${y}) {${nodeText}};\n`;
+      }
 
-      case "tikzflowchartarrow":
-        const { from: flowFrom, to: flowTo } = props;
-        return `\\draw${props.options} (${flowFrom[0]},${flowFrom[1]}) -- (${flowTo[0]},${flowTo[1]});\n`;
+      case "tikzflowchartarrow": {
+        const { from: flowFrom, to: flowTo, options } = props;
+        const opt = options && options.trim() ? `[${options}]` : "";
+        return `\\draw${opt} (${flowFrom[0]},${flowFrom[1]}) -- (${flowTo[0]},${flowTo[1]});\n`;
+      }
 
       default:
         return childLatex;
