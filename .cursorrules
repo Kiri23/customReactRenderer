@@ -19,5 +19,7 @@ Cuando te menciones que quiero hacer brainstomrm no solo apruebes mi idea, piens
 - Create snapshot tests for new components to ensure consistent output
 - Test edge cases and error scenarios for robust functionality
 
+Use JSX whenever possible, but keep the original React.createElement version for the index.js file. Use uppercase first letter for the components name.
+
 
 
