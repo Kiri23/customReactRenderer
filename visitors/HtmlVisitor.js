@@ -2,6 +2,16 @@ const BaseElementVisitor = require("./BaseVisitor");
 
 // Concrete visitor for HTML generation - shows the power of the visitor pattern
 class HtmlVisitor extends BaseElementVisitor {
+  visitText(text, context) {
+    // HTML escape special characters
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   visitDocument(props, childResults, context) {
     return `<!DOCTYPE html>
 <html lang="en">

@@ -6,6 +6,10 @@ const TikZExamplesDocument = require("./examples/TikZExamples");
 const LatexVisitor = require("./visitors/LatexVisitor");
 const HtmlVisitor = require("./visitors/HtmlVisitor");
 const EnhancedLatexVisitor = require("./visitors/EnhancedLatexVisitor");
+const PluginManager = require("./plugins/PluginManager");
+
+// Initialize plugin manager
+const pluginManager = new PluginManager();
 
 // Host config for a LaTeX renderer
 const hostConfig = {
@@ -96,13 +100,26 @@ const hostConfig = {
 
 const LatexRenderer = Reconciler(hostConfig);
 
-// Generic render function that accepts any visitor
+// Enhanced render function with plugin support
 function renderWithVisitor(element, visitor) {
   const container = { children: [] };
   const node = LatexRenderer.createContainer(container, 0, false, null);
   LatexRenderer.updateContainer(element, node, null, null);
 
-  return visitor.visit(container);
+  // Apply plugin middleware during traversal
+  const enhancedVisitor = {
+    ...visitor,
+    visit: function (node, context = {}) {
+      // Apply middleware before processing
+      const { node: processedNode, context: processedContext } =
+        pluginManager.applyMiddleware(node, context);
+
+      // Call original visit method with proper this binding
+      return visitor.visit.call(visitor, processedNode, processedContext);
+    },
+  };
+
+  return enhancedVisitor.visit(container);
 }
 
 // Convenience functions for different output formats
@@ -119,6 +136,25 @@ function renderToHtml(element) {
 function renderToEnhancedLatex(element) {
   const visitor = new EnhancedLatexVisitor();
   return renderWithVisitor(element, visitor);
+}
+
+// Plugin-aware render function
+function renderWithPlugin(element, visitorName) {
+  const visitor = pluginManager.getVisitor(visitorName);
+  return renderWithVisitor(element, visitor);
+}
+
+// Plugin management functions
+function registerPlugin(name, plugin) {
+  return pluginManager.registerPlugin(name, plugin);
+}
+
+function getAvailableVisitors() {
+  return pluginManager.getAvailableVisitors();
+}
+
+function listPlugins() {
+  return pluginManager.listPlugins();
 }
 
 // Example usage with different configurations
@@ -193,8 +229,54 @@ const htmlFullOutput = renderToHtml(
 fs.writeFileSync("output-full.html", htmlFullOutput);
 console.log("Full HTML document written to output-full.html");
 
+// Demonstrate plugin system
+console.log("\n=== Plugin System Demo ===");
+
+// Show available visitors before plugins
+console.log("Available visitors (before plugins):", getAvailableVisitors());
+
+// Register example plugins (in a real app, these would be loaded from npm packages)
+try {
+  const MarkdownPlugin = require("./plugins/examples/MarkdownPlugin");
+  const PDFPlugin = require("./plugins/examples/PDFPlugin");
+
+  registerPlugin("markdown-renderer", MarkdownPlugin);
+  registerPlugin("pdf-renderer", PDFPlugin);
+
+  console.log("Available visitors (after plugins):", getAvailableVisitors());
+  console.log("Registered plugins:", listPlugins());
+
+  // Generate Markdown using plugin
+  const markdownOutput = renderWithPlugin(<TikZExamplesDocument />, "markdown");
+  fs.writeFileSync("output-tikz.md", markdownOutput);
+  console.log("Markdown document written to output-tikz.md");
+
+  // Generate PDF using plugin
+  const pdfOutput = renderWithPlugin(<TikZExamplesDocument />, "pdf");
+  fs.writeFileSync("output-tikz.pdf", pdfOutput);
+  console.log("PDF document written to output-tikz.pdf");
+} catch (error) {
+  console.log(
+    "Plugin demo skipped (example plugins not available):",
+    error.message,
+  );
+}
+
 console.log("\n=== Sample output (Enhanced LaTeX document) ===");
 console.log(enhancedOutput.substring(0, 800) + "...");
 
 console.log("\n=== Sample output (TikZ HTML document) ===");
 console.log(htmlOutput.substring(0, 500) + "...");
+
+// Export plugin management functions
+module.exports = {
+  renderToLatex,
+  renderToHtml,
+  renderToEnhancedLatex,
+  renderWithVisitor,
+  renderWithPlugin,
+  registerPlugin,
+  getAvailableVisitors,
+  listPlugins,
+  pluginManager,
+};

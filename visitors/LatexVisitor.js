@@ -2,6 +2,21 @@ const BaseElementVisitor = require("./BaseVisitor");
 
 // Concrete visitor for LaTeX generation
 class LatexVisitor extends BaseElementVisitor {
+  visitText(text, context) {
+    // Escape LaTeX special characters
+    return text
+      .replace(/\\/g, "\\textbackslash{}")
+      .replace(/\{/g, "\\{")
+      .replace(/\}/g, "\\}")
+      .replace(/\$/g, "\\$")
+      .replace(/\^/g, "\\^{}")
+      .replace(/_/g, "\\_")
+      .replace(/~/g, "\\~{}")
+      .replace(/%/g, "\\%")
+      .replace(/&/g, "\\&")
+      .replace(/#/g, "\\#");
+  }
+
   visitDocument(props, childResults, context) {
     return `\\documentclass{article}
 \\usepackage{amsmath}

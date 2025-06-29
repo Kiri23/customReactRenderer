@@ -1,0 +1,71 @@
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+BT
+/F1 12 Tf
+50 700 Td
+(TikZ Diagrams Examples) Tj
+ET
+BT
+/F1 12 Tf
+50 730 Td
+(This document demonstrates various TikZ diagrams that can be rendered in Overleaf. Each section shows different types of diagrams created using React components.) Tj
+ET
+BT
+/F1 12 Tf
+50 650 Td
+(Geometric Shapes) Tj
+ET
+BT
+/F1 12 Tf
+50 710 Td
+(This section demonstrates basic TikZ geometric shapes.) Tj
+ET
+
+BT
+/F1 12 Tf
+50 600 Td
+(Flowchart Example) Tj
+ET
+BT
+/F1 12 Tf
+50 690 Td
+(This section shows a simple flowchart created with TikZ.) Tj
+ET
+
+BT
+/F1 12 Tf
+50 550 Td
+(Mathematical Diagram) Tj
+ET
+BT
+/F1 12 Tf
+50 670 Td
+(This section demonstrates a mathematical diagram with axes and functions.) Tj
+ET
+
+BT
+/F1 12 Tf
+50 500 Td
+(Simple Circuit Diagram) Tj
+ET
+BT
+/F1 12 Tf
+50 650 Td
+(This section shows a simple electrical circuit diagram.) Tj
+ET
+
+xref
+0 3
+0000000000 65535 f
+trailer
+<<
+/Size 3
+/Root 1 0 R
+>>
+startxref
+%%EOF
