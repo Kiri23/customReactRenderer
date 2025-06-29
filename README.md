@@ -2,7 +2,20 @@
 
 This project demonstrates a powerful approach to rendering React JSX trees into different output formats using the **Visitor Pattern** and **DFS (Depth-First Search)** traversal.
 
-## Architecture Overview
+## What We're Using
+
+### Core Technologies & Patterns
+- **React Reconciler**: Uses React's reconciliation algorithm for tree management
+- **Visitor Pattern**: Each output format (LaTeX, HTML) is a separate visitor class
+- **DFS Traversal**: Recursive depth-first search through the JSX tree
+- **Context Passing**: Rich context system with depth, path, siblings, and position tracking
+- **Accumulated State**: Track node count, max depth, and other statistics during traversal
+- **Two-Phase Processing**: Down phase (collect child results) + Up phase (build output)
+- **Polymorphism**: Each element type has its own processing method
+- **Extensible Architecture**: Easy to add new output formats without changing existing code
+
+### Architecture Overview
+For detailed technical architecture, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ### Core Concepts
 
@@ -10,6 +23,7 @@ This project demonstrates a powerful approach to rendering React JSX trees into 
 2. **DFS Traversal**: We traverse the tree depth-first, collecting nodes on the way down and building output on the way up
 3. **Visitor Pattern**: Each output format (LaTeX, HTML, etc.) is implemented as a separate visitor class
 4. **Polymorphism**: Easy to add new output formats by creating new visitor classes
+5. **Context Awareness**: Rich context information for smart processing decisions
 
 ### How It Works
 
@@ -27,15 +41,17 @@ JSX Tree → React Reconciler → Container Tree → Visitor Pattern → Output 
 
 ```
 customReactRenderer/
-├── latexRenderer.js          # Main renderer with React reconciler
+├── latexRenderer.js              # Main renderer with React reconciler
 ├── visitors/
-│   ├── BaseVisitor.js        # Abstract base visitor class
-│   ├── LatexVisitor.js       # LaTeX output visitor
-│   └── HtmlVisitor.js        # HTML output visitor
+│   ├── BaseVisitor.js            # Abstract base visitor class with DFS traversal
+│   ├── LatexVisitor.js           # LaTeX output visitor
+│   ├── HtmlVisitor.js            # HTML output visitor
+│   └── EnhancedLatexVisitor.js   # Context-aware LaTeX visitor
 ├── examples/
-│   ├── DynamicDocument.js    # Example React components
-│   └── TikZExamples.js       # TikZ diagram examples
-└── README.md                 # This file
+│   ├── DynamicDocument.js        # Example React components
+│   └── TikZExamples.js           # TikZ diagram examples
+├── ARCHITECTURE.md               # Detailed architecture documentation
+└── README.md                     # This file
 ```
 
 ## Usage
@@ -43,7 +59,7 @@ customReactRenderer/
 ### Basic Usage
 
 ```javascript
-const { renderToLatex, renderToHtml } = require('./latexRenderer');
+const { renderToLatex, renderToHtml, renderToEnhancedLatex } = require('./latexRenderer');
 
 // Your JSX component
 const MyComponent = () => (
@@ -61,6 +77,10 @@ console.log(latex);
 // Generate HTML
 const html = renderToHtml(<MyComponent />);
 console.log(html);
+
+// Generate enhanced LaTeX with context awareness
+const enhancedLatex = renderToEnhancedLatex(<MyComponent />);
+console.log(enhancedLatex);
 ```
 
 ### Advanced Usage with Custom Visitors
@@ -149,6 +169,8 @@ module.exports = MarkdownVisitor;
 4. **Extensibility**: Easy to add new output formats without modifying existing code
 5. **Separation of Concerns**: Each visitor handles one output format
 6. **React-like**: Follows React's rendering philosophy
+7. **Context Awareness**: Rich context information for smart processing
+8. **Accumulated State**: Track statistics across the entire tree
 
 ### Comparison with Original Approach
 
@@ -179,6 +201,7 @@ visitBold(props, childResults, context) {
 3. **Easier Testing**: Each visitor method can be tested independently
 4. **Multiple Output Formats**: Same tree can generate LaTeX, HTML, Markdown, etc.
 5. **Context Awareness**: Visitors can access parent context and accumulated state
+6. **Smart Processing**: Context-aware formatting, numbering, and indentation
 
 ## React Rendering Comparison
 
@@ -193,15 +216,29 @@ Our approach mirrors this:
 2. **Reconciliation**: React Reconciler processes the tree
 3. **Visitor Pattern**: We delegate to format-specific visitors (LaTeX, HTML, etc.)
 
+## Context System Features
+
+The enhanced context system provides:
+
+- **Depth tracking**: Know how deep in the tree you are
+- **Path information**: Array of node types from root to current node
+- **Sibling information**: Number of siblings and position among them
+- **Accumulated statistics**: Node count, max depth, etc.
+- **Position flags**: isFirst, isLast for smart formatting
+
 ## Future Enhancements
 
 1. **More Output Formats**: Markdown, PDF, SVG, etc.
-2. **Context Passing**: Pass accumulated context through the tree
+2. **Advanced Context**: More sophisticated context passing
 3. **Conditional Rendering**: Support for conditional elements
 4. **Error Handling**: Better error handling for malformed trees
 5. **Performance Optimization**: Caching and memoization
 6. **Plugin System**: Allow third-party visitors
+7. **Type Safety**: TypeScript support
+8. **Validation**: Tree structure validation
 
 ## Conclusion
 
-This architecture provides a clean, extensible, and efficient way to render React JSX trees into various output formats. The visitor pattern combined with DFS traversal takes full advantage of the tree structure while maintaining clean separation of concerns and easy extensibility. 
+This architecture provides a clean, extensible, and efficient way to render React JSX trees into various output formats. The visitor pattern combined with DFS traversal and rich context passing takes full advantage of the tree structure while maintaining clean separation of concerns and easy extensibility.
+
+For detailed technical architecture, see [ARCHITECTURE.md](./ARCHITECTURE.md). 
