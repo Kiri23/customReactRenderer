@@ -5,6 +5,7 @@ const DynamicDocumentExample = require("./examples/DynamicDocument");
 const TikZExamplesDocument = require("./examples/TikZExamples");
 const LatexVisitor = require("./visitors/LatexVisitor");
 const HtmlVisitor = require("./visitors/HtmlVisitor");
+const EnhancedLatexVisitor = require("./visitors/EnhancedLatexVisitor");
 
 // Host config for a LaTeX renderer
 const hostConfig = {
@@ -115,6 +116,11 @@ function renderToHtml(element) {
   return renderWithVisitor(element, visitor);
 }
 
+function renderToEnhancedLatex(element) {
+  const visitor = new EnhancedLatexVisitor();
+  return renderWithVisitor(element, visitor);
+}
+
 // Example usage with different configurations
 const configs = {
   full: {
@@ -171,6 +177,11 @@ const tikzOutput = renderToLatex(<TikZExamplesDocument />);
 fs.writeFileSync("output-tikz.tex", tikzOutput);
 console.log("TikZ LaTeX document written to output-tikz.tex");
 
+// Generate enhanced LaTeX document (demonstrating context awareness)
+const enhancedOutput = renderToEnhancedLatex(<TikZExamplesDocument />);
+fs.writeFileSync("output-enhanced.tex", enhancedOutput);
+console.log("Enhanced LaTeX document written to output-enhanced.tex");
+
 // Generate HTML documents (showing the power of the visitor pattern)
 const htmlOutput = renderToHtml(<TikZExamplesDocument />);
 fs.writeFileSync("output-tikz.html", htmlOutput);
@@ -182,8 +193,8 @@ const htmlFullOutput = renderToHtml(
 fs.writeFileSync("output-full.html", htmlFullOutput);
 console.log("Full HTML document written to output-full.html");
 
-console.log("\n=== Sample output (TikZ LaTeX document) ===");
-console.log(tikzOutput);
+console.log("\n=== Sample output (Enhanced LaTeX document) ===");
+console.log(enhancedOutput.substring(0, 800) + "...");
 
 console.log("\n=== Sample output (TikZ HTML document) ===");
 console.log(htmlOutput.substring(0, 500) + "...");

@@ -20,14 +20,33 @@ class BaseElementVisitor {
     }
 
     const { type, props, children } = node;
-    const childContext = { ...context, parent: type };
 
-    // DFS: Process children first (way down)
-    const childResults = (children || []).map((child) =>
-      this.visit(child, childContext),
+    // Enhanced context with accumulated state
+    const childContext = {
+      ...context,
+      parent: type,
+      depth: (context.depth || 0) + 1,
+      path: [...(context.path || []), type],
+      siblings: children ? children.length : 0,
+      index: context.index || 0,
+      isFirst: context.index === 0,
+      isLast: context.index === context.siblings - 1,
+      accumulated: {
+        ...context.accumulated,
+        nodeCount: (context.accumulated?.nodeCount || 0) + 1,
+        depth: Math.max(
+          context.accumulated?.depth || 0,
+          (context.depth || 0) + 1,
+        ),
+      },
+    };
+
+    // DFS: Process children first (way down) with enhanced context
+    const childResults = (children || []).map((child, index) =>
+      this.visit(child, { ...childContext, index }),
     );
 
-    // Then process current node (way up)
+    // Then process current node (way up) with accumulated results
     return this.visitElement(type, props, childResults, context);
   }
 
@@ -49,6 +68,29 @@ class BaseElementVisitor {
       return "Unknown";
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // Helper methods for context-aware processing
+  getContextInfo(context) {
+    return {
+      depth: context.depth || 0,
+      path: context.path || [],
+      isFirst: context.isFirst || false,
+      isLast: context.isLast || false,
+      siblings: context.siblings || 0,
+      accumulated: context.accumulated || {},
+    };
+  }
+
+  // Method to check if we're in a specific context
+  isInContext(context, targetPath) {
+    const currentPath = context.path || [];
+    return targetPath.every((item, index) => currentPath[index] === item);
+  }
+
+  // Method to get accumulated statistics
+  getAccumulatedStats(context) {
+    return context.accumulated || {};
   }
 }
 
