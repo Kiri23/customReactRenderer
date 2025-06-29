@@ -3,58 +3,58 @@ const { useLatexConfig } = require("../contexts/LatexConfigContext");
 
 // Basic LaTeX components
 const Document = ({ children, ...props }) =>
-  React.createElement("document", props, children);
+  React.createElement("Document", props, children);
 
 const Section = ({ title, children }) =>
-  React.createElement("section", null, [title, children]);
+  React.createElement("Section", null, [title, children]);
 
 const Subsection = ({ children, title, ...props }) =>
-  React.createElement("subsection", props, title || children);
+  React.createElement("Subsection", props, title || children);
 
 const Paragraph = ({ children, ...props }) =>
-  React.createElement("paragraph", props, children);
+  React.createElement("Paragraph", props, children);
 
 const Bold = ({ children, ...props }) =>
-  React.createElement("bold", props, children);
+  React.createElement("Bold", props, children);
 
 const Italic = ({ children, ...props }) =>
-  React.createElement("italic", props, children);
+  React.createElement("Italic", props, children);
 
 const Underline = ({ children, ...props }) =>
-  React.createElement("underline", props, children);
+  React.createElement("Underline", props, children);
 
 // Math components
 const Math = ({ children, ...props }) =>
-  React.createElement("math", props, children);
+  React.createElement("Math", props, children);
 
 const DisplayMath = ({ children, ...props }) =>
-  React.createElement("displaymath", props, children);
+  React.createElement("DisplayMath", props, children);
 
 const Equation = ({ children, label, ...props }) =>
-  React.createElement("equation", { ...props, label }, children);
+  React.createElement("Equation", { ...props, label }, children);
 
 // List components
 const Itemize = ({ children, ...props }) =>
-  React.createElement("itemize", props, children);
+  React.createElement("Itemize", props, children);
 
 const Enumerate = ({ children, ...props }) =>
-  React.createElement("enumerate", props, children);
+  React.createElement("Enumerate", props, children);
 
 const Item = ({ children, ...props }) =>
-  React.createElement("item", props, children);
+  React.createElement("Item", props, children);
 
 // Table components
 const Table = ({ children, caption, ...props }) =>
-  React.createElement("table", { ...props, caption }, children);
+  React.createElement("Table", { ...props, caption }, children);
 
 const Tabular = ({ children, align = "l", ...props }) =>
-  React.createElement("tabular", { ...props, align }, children);
+  React.createElement("Tabular", { ...props, align }, children);
 
 const TableRow = ({ children, ...props }) =>
-  React.createElement("tr", props, children);
+  React.createElement("Tr", props, children);
 
 const TableCell = ({ children, ...props }) =>
-  React.createElement("td", props, children);
+  React.createElement("Td", props, children);
 
 // Special components that use context
 const ConfigurableMath = ({ children, ...props }) => {
@@ -64,7 +64,7 @@ const ConfigurableMath = ({ children, ...props }) => {
     return null;
   }
 
-  return <Math {...props}>{children}</Math>;
+  return React.createElement("Math", props, children);
 };
 
 const ConfigurableTable = ({ children, ...props }) => {
@@ -74,7 +74,7 @@ const ConfigurableTable = ({ children, ...props }) => {
     return null;
   }
 
-  return <Table {...props}>{children}</Table>;
+  return React.createElement("Table", props, children);
 };
 
 const ConfigurableList = ({ children, ...props }) => {
@@ -84,7 +84,7 @@ const ConfigurableList = ({ children, ...props }) => {
     return null;
   }
 
-  return <Itemize {...props}>{children}</Itemize>;
+  return React.createElement("Itemize", props, children);
 };
 
 // Document structure components
@@ -95,10 +95,12 @@ const Abstract = ({ children, ...props }) => {
     return null;
   }
 
-  return (
-    <Paragraph {...props}>
-      <Bold>Abstract:</Bold> {children}
-    </Paragraph>
+  return React.createElement(
+    "Paragraph",
+    props,
+    React.createElement("Bold", null, "Abstract:"),
+    " ",
+    children,
   );
 };
 
@@ -109,10 +111,12 @@ const Keywords = ({ children, ...props }) => {
     return null;
   }
 
-  return (
-    <Paragraph {...props}>
-      <Bold>Keywords:</Bold> {children}
-    </Paragraph>
+  return React.createElement(
+    "Paragraph",
+    props,
+    React.createElement("Bold", null, "Keywords:"),
+    " ",
+    children,
   );
 };
 
@@ -123,10 +127,10 @@ const References = ({ children, ...props }) => {
     return null;
   }
 
-  return (
-    <Section title="References" {...props}>
-      {children}
-    </Section>
+  return React.createElement(
+    "Section",
+    { title: "References", ...props },
+    children,
   );
 };
 
@@ -137,10 +141,10 @@ const Appendix = ({ children, ...props }) => {
     return null;
   }
 
-  return (
-    <Section title="Appendix" {...props}>
-      {children}
-    </Section>
+  return React.createElement(
+    "Section",
+    { title: "Appendix", ...props },
+    children,
   );
 };
 

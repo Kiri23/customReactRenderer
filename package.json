@@ -2,7 +2,7 @@
   "name": "custom-react-renderer",
   "version": "1.0.0",
   "description": "Custom React renderer that writes to text files",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
@@ -13,7 +13,10 @@
     "test:performance": "jest --testPathPattern=performance",
     "start": "babel-node index.jsx",
     "latex": "babel-node latexRenderer.js",
-    "validate": "npm run test:unit && npm run test:integration && npm run test:snapshots"
+    "validate": "npm run test:unit && npm run test:integration && npm run test:snapshots",
+    "example:basic": "babel-node examples/basic-usage.jsx",
+    "example:custom": "babel-node examples/custom-renderer.jsx",
+    "example:tikz": "babel-node examples/tikz-example.jsx"
   },
   "dependencies": {
     "react": "^18.2.0",

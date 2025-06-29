@@ -1,244 +1,310 @@
-# React to LaTeX/HTML Renderer with Visitor Pattern
+# React Universal Renderer
 
-This project demonstrates a powerful approach to rendering React JSX trees into different output formats using the **Visitor Pattern** and **DFS (Depth-First Search)** traversal.
+A powerful system for converting JSX to multiple output formats using React Reconciler and flexible templates. **The main purpose is to allow developers to create their own custom renderers using templates and flexible mapping.**
 
-## What We're Using
+## Features
 
-### Core Technologies & Patterns
-- **React Reconciler**: Uses React's reconciliation algorithm for tree management
-- **Visitor Pattern**: Each output format (LaTeX, HTML) is a separate visitor class
-- **DFS Traversal**: Recursive depth-first search through the JSX tree
-- **Context Passing**: Rich context system with depth, path, siblings, and position tracking
-- **Accumulated State**: Track node count, max depth, and other statistics during traversal
-- **Two-Phase Processing**: Down phase (collect child results) + Up phase (build output)
-- **Polymorphism**: Each element type has its own processing method
-- **Extensible Architecture**: Easy to add new output formats without changing existing code
+- **ReactLatex.render()** - Render JSX to LaTeX/PDF
+- **ReactMarkdown.render()** - Render JSX to Markdown  
+- **ReactCustom.render()** - **MAIN**: Create custom renderers with your own templates and mapping
+- **Template System** - Modular, reusable templates with inheritance support
+- **Flexible Mapping** - No forced naming conventions
+- **Community Ecosystem** - Share and reuse templates
+- **React DOM Integration** - Leverages existing React DOM for HTML
 
-### Architecture Overview
-For detailed technical architecture, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+## Installation
 
-### Core Concepts
-
-1. **Tree Structure**: JSX naturally creates a tree structure, just like React's Virtual DOM
-2. **DFS Traversal**: We traverse the tree depth-first, collecting nodes on the way down and building output on the way up
-3. **Visitor Pattern**: Each output format (LaTeX, HTML, etc.) is implemented as a separate visitor class
-4. **Polymorphism**: Easy to add new output formats by creating new visitor classes
-5. **Context Awareness**: Rich context information for smart processing decisions
-
-### How It Works
-
-```
-JSX Tree → React Reconciler → Container Tree → Visitor Pattern → Output Format
+```bash
+yarn add custom-react-renderer
 ```
 
-1. **JSX Tree**: Your React components create a tree structure
-2. **React Reconciler**: Converts JSX to a simple tree representation
-3. **DFS Traversal**: Visitor walks the tree depth-first
-4. **Polymorphic Processing**: Each node type is handled by specific visitor methods
-5. **Output Generation**: Final output is built from the bottom up
-
-## File Structure
-
-```
-customReactRenderer/
-├── latexRenderer.js              # Main renderer with React reconciler
-├── visitors/
-│   ├── BaseVisitor.js            # Abstract base visitor class with DFS traversal
-│   ├── LatexVisitor.js           # LaTeX output visitor
-│   ├── HtmlVisitor.js            # HTML output visitor
-│   └── EnhancedLatexVisitor.js   # Context-aware LaTeX visitor
-├── examples/
-│   ├── DynamicDocument.js        # Example React components
-│   └── TikZExamples.js           # TikZ diagram examples
-├── ARCHITECTURE.md               # Detailed architecture documentation
-└── README.md                     # This file
-```
-
-## Usage
+## Quick Start
 
 ### Basic Usage
 
 ```javascript
-const { renderToLatex, renderToHtml, renderToEnhancedLatex } = require('./latexRenderer');
+const React = require('react');
+const { ReactLatex, ReactMarkdown } = require('custom-react-renderer');
 
-// Your JSX component
-const MyComponent = () => (
-  <document>
-    <section>
-      <bold>Hello World</bold>
-    </section>
-  </document>
+const MyDocument = () => (
+  <Document>
+    <Section>Introduction</Section>
+    <Paragraph>This is a paragraph with <Bold>important text</Bold>.</Paragraph>
+    <Subsection>Math Example</Subsection>
+    <Math>E = mc^2</Math>
+  </Document>
 );
 
-// Generate LaTeX
-const latex = renderToLatex(<MyComponent />);
-console.log(latex);
-
-// Generate HTML
-const html = renderToHtml(<MyComponent />);
-console.log(html);
-
-// Generate enhanced LaTeX with context awareness
-const enhancedLatex = renderToEnhancedLatex(<MyComponent />);
-console.log(enhancedLatex);
+// Render to different formats
+const latex = ReactLatex.render(<MyDocument />);
+const markdown = ReactMarkdown.render(<MyDocument />);
+const html = ReactDOM.renderToString(<MyDocument />); // React DOM
 ```
 
-### Advanced Usage with Custom Visitors
+### Custom Renderer (MAIN FEATURE)
 
 ```javascript
-const { renderWithVisitor } = require('./latexRenderer');
-const MyCustomVisitor = require('./visitors/MyCustomVisitor');
+const { ReactCustom } = require('custom-react-renderer');
 
-const visitor = new MyCustomVisitor();
-const output = renderWithVisitor(<MyComponent />, visitor);
-```
-
-## Creating New Visitors
-
-To add a new output format, simply extend the `BaseVisitor` class:
-
-```javascript
-const BaseVisitor = require('./visitors/BaseVisitor');
-
-class MarkdownVisitor extends BaseVisitor {
-  visitDocument(props, childResults, context) {
-    return childResults.join('\n\n');
+// Create your own YAML renderer
+const yamlRenderer = ReactCustom.render(
+  <MyDocument />,
+  {
+    templates: {
+      document: (props, children) => `document:\n  ${children.join('\n  ')}`,
+      section: (props, children) => `section:\n    title: ${children[0]}\n    content: ${children.slice(1).join('')}`,
+      bold: (props, children) => `bold: ${children.join('')}`
+    },
+    mapping: {
+      'Document': 'document',
+      'Section': 'section', 
+      'Bold': 'bold'
+    }
   }
+);
 
-  visitSection(props, childResults, context) {
-    const title = childResults[0] || '';
-    const content = childResults.slice(1).join('');
+console.log(yamlRenderer);
+// Output:
+// document:
+//   section:
+//     title: Introduction
+//     content: 
+//   bold: Important text
+```
+
+## API Reference
+
+### ReactLatex.render(jsxElement, templateName?, customMapping?)
+
+Renders JSX to LaTeX format.
+
+```javascript
+// Basic usage
+const latex = ReactLatex.render(<MyDocument />);
+
+// With custom template
+const latex = ReactLatex.render(<MyDocument />, 'basic');
+
+// With custom mapping
+const latex = ReactLatex.render(<MyDocument />, 'basic', {
+  'MyCustomElement': 'custom',
+  'SpecialSection': 'section'
+});
+```
+
+### ReactMarkdown.render(jsxElement, templateName?, customMapping?)
+
+Renders JSX to Markdown format.
+
+```javascript
+const markdown = ReactMarkdown.render(<MyDocument />);
+```
+
+### ReactCustom.render(jsxElement, config)
+
+Renders JSX using custom templates and mapping.
+
+```javascript
+const output = ReactCustom.render(<MyDocument />, {
+  templates: {
+    // Template functions that receive (props, children, context)
+    document: (props, children) => `...`,
+    section: (props, children) => `...`,
+    // ...
+  },
+  mapping: {
+    // Maps JSX element names to template names
+    'Document': 'document',
+    'Section': 'section',
+    // ...
+  }
+});
+```
+
+## Creating Custom Templates
+
+Templates are functions that receive props, children, and context:
+
+```javascript
+const templates = {
+  // Basic template
+  section: (props, children) => {
+    const title = children[0] || '';
+    const content = children.slice(1).join('');
     return `# ${title}\n\n${content}`;
+  },
+  
+  // Template with props
+  math: (props, children) => {
+    const display = props.display ? '$$' : '$';
+    return `${display}${children.join('')}${display}`;
+  },
+  
+  // Template with context
+  item: (props, children, context) => {
+    const bullet = context.isFirst ? '•' : '  •';
+    return `${bullet} ${children.join('')}\n`;
   }
+};
+```
 
-  visitBold(props, childResults, context) {
-    return `**${childResults.join('')}**`;
-  }
+## Template Inheritance
 
-  // Add more visit methods for other element types...
-}
+Templates can inherit from other templates:
 
-module.exports = MarkdownVisitor;
+```javascript
+const registry = new TemplateRegistry();
+
+// Base templates
+registry.register('base', {
+  document: (props, children) => `DOCUMENT: ${children.join('')}`,
+  section: (props, children) => `SECTION: ${children[0]}`
+});
+
+// Extended templates
+registry.register('extended', {
+  section: (props, children) => `ENHANCED: ${children[0]}`,
+  paragraph: (props, children) => `PARAGRAPH: ${children.join('')}`
+}, { extends: 'base' });
 ```
 
 ## Supported Element Types
 
 ### Basic Elements
-- `document` - Document wrapper
-- `section` - Section with title and content
-- `subsection` - Subsection with title and content
-- `paragraph` - Paragraph text
-- `bold` - Bold text
-- `italic` - Italic text
-- `underline` - Underlined text
+- `Document` - Document wrapper
+- `Section` - Section with title and content
+- `Subsection` - Subsection with title and content
+- `Paragraph` - Paragraph text
+- `Bold` - Bold text
+- `Italic` - Italic text
+- `Underline` - Underlined text
 
 ### Mathematical Elements
-- `math` - Inline math
-- `displaymath` - Display math
-- `equation` - Numbered equation
+- `Math` - Inline math
+- `DisplayMath` - Display math
+- `Equation` - Numbered equation
 
 ### Lists and Tables
-- `itemize` - Unordered list
-- `enumerate` - Ordered list
-- `item` - List item
-- `table` - Table with caption
-- `tabular` - Table body
-- `tr` - Table row
-- `td` - Table cell
+- `Itemize` - Unordered list
+- `Enumerate` - Ordered list
+- `Item` - List item
+- `Table` - Table with caption
+- `Tabular` - Table body
+- `Tr` - Table row
+- `Td` - Table cell
 
 ### TikZ Elements
-- `tikzdiagram` - TikZ diagram container
-- `tikzcircle` - Circle
-- `tikzrectangle` - Rectangle
-- `tikzline` - Line
-- `tikzarrow` - Arrow
-- `tikznode` - Text node
-- `tikzgrid` - Grid
-- `tikzaxis` - Coordinate axes
-- `tikzflowchart` - Flowchart container
-- `tikzflowchartnode` - Flowchart node
-- `tikzflowchartarrow` - Flowchart arrow
+- `TikzDiagram` - TikZ diagram container
+- `TikzCircle` - Circle
+- `TikzRectangle` - Rectangle
+- `TikzLine` - Line
+- `TikzArrow` - Arrow
+- `TikzNode` - Text node
+- `TikzGrid` - Grid
+- `TikzAxis` - Coordinate axes
+- `TikzFlowchart` - Flowchart container
+- `TikzFlowchartNode` - Flowchart node
+- `TikzFlowchartArrow` - Flowchart arrow
 
-## Why This Approach?
+## Examples
 
-### Advantages
+### JSON Renderer
 
-1. **Tree Structure Utilization**: Takes full advantage of JSX's natural tree structure
-2. **DFS Efficiency**: Processes children before parents, perfect for building nested structures
-3. **Polymorphism**: Each element type has its own processing method
-4. **Extensibility**: Easy to add new output formats without modifying existing code
-5. **Separation of Concerns**: Each visitor handles one output format
-6. **React-like**: Follows React's rendering philosophy
-7. **Context Awareness**: Rich context information for smart processing
-8. **Accumulated State**: Track statistics across the entire tree
-
-### Comparison with Original Approach
-
-**Original (Switch Statement)**:
 ```javascript
-switch (type) {
-  case "section": return `\\section{${childLatex}}`;
-  case "bold": return `\\textbf{${childLatex}}`;
-  // ... many more cases
-}
+const jsonRenderer = ReactCustom.render(
+  <MyDocument />,
+  {
+    templates: {
+      document: (props, children) => JSON.stringify({ type: 'document', children }, null, 2),
+      section: (props, children) => JSON.stringify({ type: 'section', title: children[0] }, null, 2)
+    },
+    mapping: {
+      'Document': 'document',
+      'Section': 'section'
+    }
+  }
+);
 ```
 
-**New (Visitor Pattern)**:
-```javascript
-visitSection(props, childResults, context) {
-  return `\\section{${childResults[0]}}\n${childResults.slice(1).join('')}`;
-}
+### HTML Renderer
 
-visitBold(props, childResults, context) {
-  return `\\textbf{${childResults.join('')}}`;
-}
+```javascript
+const htmlRenderer = ReactCustom.render(
+  <MyDocument />,
+  {
+    templates: {
+      document: (props, children) => `<!DOCTYPE html>\n<html>\n<body>\n${children.join('\n')}\n</body>\n</html>`,
+      section: (props, children) => `<h1>${children[0]}</h1>\n${children.slice(1).join('')}`,
+      bold: (props, children) => `<strong>${children.join('')}</strong>`
+    },
+    mapping: {
+      'Document': 'document',
+      'Section': 'section',
+      'Bold': 'bold'
+    }
+  }
+);
 ```
 
-### Benefits
+### CSV Renderer
 
-1. **Cleaner Code**: Each element type has its own method
-2. **Better Organization**: Related functionality is grouped together
-3. **Easier Testing**: Each visitor method can be tested independently
-4. **Multiple Output Formats**: Same tree can generate LaTeX, HTML, Markdown, etc.
-5. **Context Awareness**: Visitors can access parent context and accumulated state
-6. **Smart Processing**: Context-aware formatting, numbering, and indentation
+```javascript
+const csvRenderer = ReactCustom.render(
+  <MyDocument />,
+  {
+    templates: {
+      document: (props, children) => children.join('\n'),
+      section: (props, children) => `"Section","${children[0]}"`,
+      paragraph: (props, children) => `"Paragraph","${children.join('')}"`
+    },
+    mapping: {
+      'Document': 'document',
+      'Section': 'section',
+      'Paragraph': 'paragraph'
+    }
+  }
+);
+```
 
-## React Rendering Comparison
+## Architecture
 
-Yes, this approach is very similar to how React renders the DOM:
+The system uses React Reconciler to parse JSX into a tree structure, then applies templates and mapping to generate output:
 
-1. **Virtual DOM Tree**: React creates a tree of React elements
-2. **Reconciliation**: React compares trees and determines changes
-3. **Host Environment**: React delegates to host-specific renderers (DOM, React Native, etc.)
+```
+JSX → React Reconciler → Tree Structure → Templates + Mapping → Output
+```
 
-Our approach mirrors this:
-1. **JSX Tree**: We create a tree of custom elements
-2. **Reconciliation**: React Reconciler processes the tree
-3. **Visitor Pattern**: We delegate to format-specific visitors (LaTeX, HTML, etc.)
+### Core Components
 
-## Context System Features
+- **BaseRenderer** - Base class using React Reconciler
+- **TemplateRegistry** - Manages template registration and inheritance
+- **CustomVisitor** - Applies templates and mapping during tree traversal
+- **ReactLatex** - LaTeX renderer with predefined templates
+- **ReactMarkdown** - Markdown renderer with predefined templates
+- **ReactCustom** - Custom renderer for user-defined templates
 
-The enhanced context system provides:
+## Migration from Legacy API
 
-- **Depth tracking**: Know how deep in the tree you are
-- **Path information**: Array of node types from root to current node
-- **Sibling information**: Number of siblings and position among them
-- **Accumulated statistics**: Node count, max depth, etc.
-- **Position flags**: isFirst, isLast for smart formatting
+The legacy `latexRenderer.js` is still available for backward compatibility:
 
-## Future Enhancements
+```javascript
+// Legacy API (still works)
+const { renderToLatex } = require('./latexRenderer');
+const latex = renderToLatex(<MyDocument />);
 
-1. **More Output Formats**: Markdown, PDF, SVG, etc.
-2. **Advanced Context**: More sophisticated context passing
-3. **Conditional Rendering**: Support for conditional elements
-4. **Error Handling**: Better error handling for malformed trees
-5. **Performance Optimization**: Caching and memoization
-6. **Plugin System**: Allow third-party visitors
-7. **Type Safety**: TypeScript support
-8. **Validation**: Tree structure validation
+// New API (recommended)
+const { ReactLatex } = require('./src');
+const latex = ReactLatex.render(<MyDocument />);
+```
 
-## Conclusion
+## Contributing
 
-This architecture provides a clean, extensible, and efficient way to render React JSX trees into various output formats. The visitor pattern combined with DFS traversal and rich context passing takes full advantage of the tree structure while maintaining clean separation of concerns and easy extensibility.
+1. Fork the repository
+2. Create a feature branch
+3. Add your templates to `src/templates/`
+4. Add tests in `tests/`
+5. Submit a pull request
 
-For detailed technical architecture, see [ARCHITECTURE.md](./ARCHITECTURE.md). 
+## License
+
+MIT 

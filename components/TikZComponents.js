@@ -3,7 +3,7 @@ const { useLatexConfig } = require("../contexts/LatexConfigContext");
 
 // Basic TikZ shapes
 const TikZCircle = ({ x = 0, y = 0, radius = 1, options = "", ...props }) =>
-  React.createElement("tikzcircle", { x, y, radius, options, ...props });
+  React.createElement("TikZCircle", { x, y, radius, options, ...props });
 
 const TikZRectangle = ({
   x = 0,
@@ -13,7 +13,7 @@ const TikZRectangle = ({
   options = "",
   ...props
 }) =>
-  React.createElement("tikzrectangle", {
+  React.createElement("TikZRectangle", {
     x,
     y,
     width,
@@ -23,13 +23,13 @@ const TikZRectangle = ({
   });
 
 const TikZLine = ({ from = [0, 0], to = [1, 1], options = "", ...props }) =>
-  React.createElement("tikzline", { from, to, options, ...props });
+  React.createElement("TikZLine", { from, to, options, ...props });
 
 const TikZArrow = ({ from = [0, 0], to = [1, 1], options = "->", ...props }) =>
-  React.createElement("tikzarrow", { from, to, options, ...props });
+  React.createElement("TikZArrow", { from, to, options, ...props });
 
 const TikZNode = ({ x = 0, y = 0, text = "", options = "", ...props }) =>
-  React.createElement("tikznode", { x, y, text, options, ...props });
+  React.createElement("TikZNode", { x, y, text, options, ...props });
 
 const TikZGrid = ({
   xmin = 0,
@@ -40,7 +40,7 @@ const TikZGrid = ({
   options = "",
   ...props
 }) =>
-  React.createElement("tikzgrid", {
+  React.createElement("TikZGrid", {
     xmin,
     ymin,
     xmax,
@@ -58,7 +58,7 @@ const TikZAxis = ({
   options = "",
   ...props
 }) =>
-  React.createElement("tikzaxis", {
+  React.createElement("TikZAxis", {
     xmin,
     ymin,
     xmax,
@@ -69,7 +69,7 @@ const TikZAxis = ({
 
 // Complex TikZ diagrams
 const TikZFlowchart = ({ children, ...props }) =>
-  React.createElement("tikzflowchart", props, children);
+  React.createElement("TikZFlowchart", props, children);
 
 const TikZFlowchartNode = ({
   x = 0,
@@ -79,7 +79,7 @@ const TikZFlowchartNode = ({
   options = "",
   ...props
 }) =>
-  React.createElement("tikzflowchartnode", {
+  React.createElement("TikZFlowchartNode", {
     x,
     y,
     text,
@@ -94,11 +94,11 @@ const TikZFlowchartArrow = ({
   options = "->",
   ...props
 }) =>
-  React.createElement("tikzflowchartarrow", { from, to, options, ...props });
+  React.createElement("TikZFlowchartArrow", { from, to, options, ...props });
 
 // TikZ Diagram container
 const TikZDiagram = ({ children, width = "8cm", height = "6cm", ...props }) =>
-  React.createElement("tikzdiagram", { width, height, ...props }, children);
+  React.createElement("TikZDiagram", { width, height, ...props }, children);
 
 // Conditional TikZ components
 const ConditionalTikZ = ({ children, ...props }) => {
@@ -106,7 +106,7 @@ const ConditionalTikZ = ({ children, ...props }) => {
   if (!isVisible("showDiagrams")) {
     return null;
   }
-  return <TikZDiagram {...props}>{children}</TikZDiagram>;
+  return React.createElement("TikZDiagram", { ...props }, children);
 };
 
 module.exports = {
