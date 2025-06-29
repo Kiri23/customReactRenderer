@@ -4,9 +4,16 @@
   "description": "Custom React renderer that writes to text files",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:snapshots": "jest --testPathPattern=snapshots",
+    "test:performance": "jest --testPathPattern=performance",
     "start": "babel-node index.jsx",
-    "latex": "babel-node latexRenderer.js"
+    "latex": "babel-node latexRenderer.js",
+    "validate": "npm run test:unit && npm run test:integration && npm run test:snapshots"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -15,6 +22,26 @@
   "devDependencies": {
     "@babel/core": "^7.23.0",
     "@babel/node": "^7.27.1",
-    "@babel/preset-react": "^7.22.0"
+    "@babel/preset-react": "^7.22.0",
+    "jest": "^29.7.0",
+    "babel-jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    },
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/tests/**/*.test.jsx"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/**/*.test.{js,jsx}",
+      "!src/index.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"],
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"]
   }
 }

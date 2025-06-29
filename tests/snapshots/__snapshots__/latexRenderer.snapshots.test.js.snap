@@ -1,0 +1,347 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`latexRenderer - Snapshot Tests Basic Document Snapshots should generate consistent basic document 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Introduction}
+
+This is a basic test document.
+
+\\section{Conclusion}
+
+This concludes the basic test.
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Basic Document Snapshots should generate consistent document with math 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Mathematical Content}
+
+The quadratic formula is: x = (-b ± √(b² - 4ac)) / 2a
+
+The area of a circle is: A = πr²
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate consistent output for empty components 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{}
+
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (0,0) circle (0cm);
+\\draw (0,0) rectangle (0,0);
+\\node at (0,0) {};
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate consistent output for extreme values 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Extreme Values}
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=black] (-1000,-1000) circle (1000cm);
+\\draw[fill=white] (1000,1000) rectangle (2000,2000);
+\\draw[thick] (-1000,-1000) -- (1000,1000);
+\\node[above] at (0,0) {Center};
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Multiple Format Snapshots should generate consistent enhanced LaTeX output 1`] = `
+"% Generated document with 1 nodes, max depth: 1
+\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+  \\subsection{ Enhanced LaTeX Snapshot Test}
+  
+This is an enhanced LaTeX snapshot test.
+
+% TikZ diagram at depth 2 with 3 elements
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=green!20] (2,2) circle (1cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Nested Structure Snapshots should generate consistent deeply nested structure 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Level 1}
+\\section{Level 2}
+\\section{Level 3}
+Deep content
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Nested Structure Snapshots should generate consistent mixed content structure 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Mixed Content Section}
+
+Regular paragraph text.
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=blue!20] (2,2) circle (1cm);
+\\node[above] at (2,3.5) {Circle Label};
+
+\\end{tikzpicture}
+\\end{figure}
+
+Another paragraph after diagram.
+
+\\section{Another Section}
+
+Final paragraph.
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests Performance Snapshot Tests should generate consistent large document 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Section }
+1
+\\section{Section }
+2
+\\section{Section }
+3
+\\section{Section }
+4
+\\section{Section }
+5
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=blue!20] (0,0) circle (0.2cm);
+\\draw[fill=blue!20] (1,0) circle (0.2cm);
+\\draw[fill=blue!20] (2,0) circle (0.2cm);
+\\draw[fill=blue!20] (0,1) circle (0.2cm);
+\\draw[fill=blue!20] (1,1) circle (0.2cm);
+\\draw[fill=blue!20] (2,1) circle (0.2cm);
+\\draw[fill=blue!20] (0,2) circle (0.2cm);
+\\draw[fill=blue!20] (1,2) circle (0.2cm);
+\\draw[fill=blue!20] (2,2) circle (0.2cm);
+\\draw[fill=blue!20] (0,3) circle (0.2cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate consistent TikZ diagram 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{TikZ Diagram}
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=blue!20, draw=blue] (2,2) circle (1cm);
+\\draw[fill=red!20, draw=red] (4,4) rectangle (5.5,5);
+\\draw[thick, green] (1,1) -- (5,5);
+\\node[above] at (2,3.5) {Circle};
+\\node[above] at (4.75,4.5) {Rectangle};
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate consistent TikZ with specific props 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Specific Props Test}
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=purple!40, draw=purple, thick] (1.5,1.5) circle (0.8cm);
+\\draw[fill=orange!30, draw=orange] (3,2) rectangle (5,3.5);
+\\draw[red, very thick] (0.5,0.5) -- (4.5,3.5);
+\\node[below, font=\\\\small] at (1.5,2.3) {Purple Circle};
+\\node[above, font=\\\\tiny] at (4,2.75) {Orange Rect};
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;
+
+exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate consistent complex TikZ diagram 1`] = `
+"\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{amssymb}
+\\usepackage{graphicx}
+\\usepackage{tikz}
+\\usepackage{pgfplots}
+\\pgfplotsset{compat=1.18}
+\\begin{document}
+
+\\section{Complex TikZ Diagram}
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw[fill=yellow!30] (1,1) circle (0.5cm);
+\\draw[fill=green!30] (3,3) circle (0.5cm);
+\\draw[fill=purple!30] (5,5) circle (0.5cm);
+\\draw[dashed, thick] (1,1) -- (3,3);
+\\draw[dotted, thick] (3,3) -- (5,5);
+\\draw[fill=red!20] (0.5,0.5) rectangle (1.5,1.5);
+\\node[above] at (2,2) {Connection};
+\\node[below] at (4,4) {Connection};
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+
+\\end{document}"
+`;

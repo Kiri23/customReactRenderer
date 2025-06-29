@@ -5,3 +5,19 @@
 - index.jsx should contain the JSX version
 - NEVER delete either file
 - Both files should be functional and working
+
+Do not remove any comment made from the user
+
+Cuando te menciones que quiero hacer brainstomrm o vamos a pensar esta idea o solamente necesite redirecion, piensa un momento analiza lo que el usuario te esta pidiendo y contestale sin ir directo a la solucion, piensa en el problema y la solucion. Para eso no tienes que escribir o cambiar el codigo, pq solamente estamos reflexionando cual es la mejor manera de resolver el problema.
+
+Cuando te menciones que quiero hacer brainstomrm no solo apruebes mi idea, piensa en la mejor manera de resolver el problema, y critica mi idea.
+
+## Testing Rules
+
+- ALWAYS write tests when adding new features to ensure nothing breaks
+- Run existing tests after any code changes to verify functionality
+- Create snapshot tests for new components to ensure consistent output
+- Test edge cases and error scenarios for robust functionality
+
+
+

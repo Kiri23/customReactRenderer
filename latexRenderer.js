@@ -103,10 +103,21 @@ const LatexRenderer = Reconciler(hostConfig);
 // Enhanced render function with plugin support
 function renderWithVisitor(element, visitor) {
   const container = { children: [] };
+  // These two lines are the key to the whole thing. This is where react apply the logics the elements and return the JSX for 
+  // the custom renderer to "renderer"
+  // The idea is then use a tree stucture and traverse it and emmit what you want as render output
   const node = LatexRenderer.createContainer(container, 0, false, null);
   LatexRenderer.updateContainer(element, node, null, null);
 
-  // Apply plugin middleware during traversal
+
+  // ------------------------------------------------------------
+  //    This can be abstracted away since this is a "implementation detail"
+  //    for API usage , developers can bring their own form of how to traverse the tree
+  //    we will also like to have a mapping of the elements to the custom text
+  //    so you can choose which "mapping" to use for the output
+  // ------------------------------------------------------------
+  // This is just I think a "better" way to traverse the tree.
+  // Each visitor is a function that spit out the custom text (since we are not rendering elements, we are creating a structured text output)
   const enhancedVisitor = {
     ...visitor,
     visit: function (node, context = {}) {
