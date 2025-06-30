@@ -1,16 +1,16 @@
-# React Universal Renderer
+# JSX LaTeX Renderer
 
-A powerful system for converting JSX to multiple output formats using React Reconciler and flexible templates. **The main purpose is to allow developers to create their own custom renderers using templates and flexible mapping.**
+A powerful system for creating LaTeX documents using familiar JSX syntax, similar to styled-components but for scientific documents. Write LaTeX documents with React components and tagged templates.
 
 ## Features
 
-- **ReactLatex.render()** - Render JSX to LaTeX/PDF
-- **ReactMarkdown.render()** - Render JSX to Markdown  
-- **ReactCustom.render()** - **MAIN**: Create custom renderers with your own templates and mapping
-- **Template System** - Modular, reusable templates with inheritance support
-- **Flexible Mapping** - No forced naming conventions
-- **Community Ecosystem** - Share and reuse templates
-- **React DOM Integration** - Leverages existing React DOM for HTML
+- **JSX Syntax** - Write LaTeX documents using familiar React components
+- **Tagged Templates** - Components created with `latex` tagged template function
+- **Nested Structure** - Natural component composition like HTML
+- **TikZ Support** - Full TikZ diagram components with props
+- **Mathematical Elements** - Math, equations, and scientific notation
+- **Type Safety** - Props with proper typing for LaTeX elements
+- **React Reconciler** - Built on React's reconciliation system
 
 ## Installation
 
@@ -20,288 +20,260 @@ yarn add custom-react-renderer
 
 ## Quick Start
 
-### Basic Usage
+### Basic JSX LaTeX Document
 
-```javascript
+```jsx
 const React = require('react');
-const { ReactLatex, ReactMarkdown } = require('custom-react-renderer');
+const {
+  Document,
+  Section,
+  Paragraph,
+  Bold,
+  TikZDiagram,
+  TikZCircle,
+  TikZRectangle,
+  TikZLine
+} = require('./components/LatexComponents');
 
 const MyDocument = () => (
   <Document>
-    <Section>Introduction</Section>
-    <Paragraph>This is a paragraph with <Bold>important text</Bold>.</Paragraph>
-    <Subsection>Math Example</Subsection>
-    <Math>E = mc^2</Math>
+    <Section title="TikZ Examples with JSX">
+      <Paragraph>
+        This document demonstrates TikZ components using JSX with tagged templates.
+      </Paragraph>
+      
+      <Paragraph>
+        <Bold>Geometric Shapes:</Bold> Circles, rectangles, and lines.
+      </Paragraph>
+      
+      <TikZDiagram width="10cm" height="8cm">
+        <TikZCircle x={2} y={2} radius={1} options="fill=blue!20, draw=blue" />
+        <TikZRectangle x={4} y={4} width={1.5} height={1} options="fill=red!20, draw=red" />
+        <TikZLine from={[1, 1]} to={[5, 5]} options="thick, green" />
+      </TikZDiagram>
+    </Section>
   </Document>
 );
 
-// Render to different formats
-const latex = ReactLatex.render(<MyDocument />);
-const markdown = ReactMarkdown.render(<MyDocument />);
-const html = ReactDOM.renderToString(<MyDocument />); // React DOM
+// Render to LaTeX
+const { renderToLatex } = require('./latexRenderer');
+const latex = renderToLatex(<MyDocument />);
+console.log(latex);
 ```
 
-### Custom Renderer (MAIN FEATURE)
+### Mathematical Document
 
-```javascript
-const { ReactCustom } = require('custom-react-renderer');
-
-// Create your own YAML renderer
-const yamlRenderer = ReactCustom.render(
-  <MyDocument />,
-  {
-    templates: {
-      document: (props, children) => `document:\n  ${children.join('\n  ')}`,
-      section: (props, children) => `section:\n    title: ${children[0]}\n    content: ${children.slice(1).join('')}`,
-      bold: (props, children) => `bold: ${children.join('')}`
-    },
-    mapping: {
-      'Document': 'document',
-      'Section': 'section', 
-      'Bold': 'bold'
-    }
-  }
+```jsx
+const MathematicalDocument = () => (
+  <Document>
+    <Section title="Mathematical Examples">
+      <Paragraph>
+        Here are some mathematical expressions:
+      </Paragraph>
+      
+      <Paragraph>
+        Einstein's famous equation: <Bold>E = mc²</Bold>
+      </Paragraph>
+      
+      <TikZDiagram width="10cm" height="8cm">
+        <TikZAxis xmin={-3} ymin={-3} xmax={3} ymax={3} />
+        <TikZGrid xmin={-3} ymin={-3} xmax={3} ymax={3} step={0.5} options="gray!20" />
+        <TikZLine from={[-2, 4]} to={[2, 4]} options="thick, blue" />
+        <TikZNode x={2.5} y={3.5} text="$f(x) = x^2$" options="blue" />
+      </TikZDiagram>
+    </Section>
+  </Document>
 );
-
-console.log(yamlRenderer);
-// Output:
-// document:
-//   section:
-//     title: Introduction
-//     content: 
-//   bold: Important text
 ```
 
 ## API Reference
 
-### ReactLatex.render(jsxElement, templateName?, customMapping?)
+### Core Components
 
-Renders JSX to LaTeX format.
-
-```javascript
-// Basic usage
-const latex = ReactLatex.render(<MyDocument />);
-
-// With custom template
-const latex = ReactLatex.render(<MyDocument />, 'basic');
-
-// With custom mapping
-const latex = ReactLatex.render(<MyDocument />, 'basic', {
-  'MyCustomElement': 'custom',
-  'SpecialSection': 'section'
-});
-```
-
-### ReactMarkdown.render(jsxElement, templateName?, customMapping?)
-
-Renders JSX to Markdown format.
-
-```javascript
-const markdown = ReactMarkdown.render(<MyDocument />);
-```
-
-### ReactCustom.render(jsxElement, config)
-
-Renders JSX using custom templates and mapping.
-
-```javascript
-const output = ReactCustom.render(<MyDocument />, {
-  templates: {
-    // Template functions that receive (props, children, context)
-    document: (props, children) => `...`,
-    section: (props, children) => `...`,
-    // ...
-  },
-  mapping: {
-    // Maps JSX element names to template names
-    'Document': 'document',
-    'Section': 'section',
-    // ...
-  }
-});
-```
-
-## Creating Custom Templates
-
-Templates are functions that receive props, children, and context:
-
-```javascript
-const templates = {
-  // Basic template
-  section: (props, children) => {
-    const title = children[0] || '';
-    const content = children.slice(1).join('');
-    return `# ${title}\n\n${content}`;
-  },
-  
-  // Template with props
-  math: (props, children) => {
-    const display = props.display ? '$$' : '$';
-    return `${display}${children.join('')}${display}`;
-  },
-  
-  // Template with context
-  item: (props, children, context) => {
-    const bullet = context.isFirst ? '•' : '  •';
-    return `${bullet} ${children.join('')}\n`;
-  }
-};
-```
-
-## Template Inheritance
-
-Templates can inherit from other templates:
-
-```javascript
-const registry = new TemplateRegistry();
-
-// Base templates
-registry.register('base', {
-  document: (props, children) => `DOCUMENT: ${children.join('')}`,
-  section: (props, children) => `SECTION: ${children[0]}`
-});
-
-// Extended templates
-registry.register('extended', {
-  section: (props, children) => `ENHANCED: ${children[0]}`,
-  paragraph: (props, children) => `PARAGRAPH: ${children.join('')}`
-}, { extends: 'base' });
-```
-
-## Supported Element Types
-
-### Basic Elements
-- `Document` - Document wrapper
+#### Document Structure
+- `Document` - Main document wrapper with LaTeX preamble
 - `Section` - Section with title and content
 - `Subsection` - Subsection with title and content
 - `Paragraph` - Paragraph text
-- `Bold` - Bold text
-- `Italic` - Italic text
-- `Underline` - Underlined text
+- `Bold` - Bold text (`\textbf{}`)
+- `Italic` - Italic text (`\textit{}`)
+- `Underline` - Underlined text (`\underline{}`)
 
-### Mathematical Elements
-- `Math` - Inline math
-- `DisplayMath` - Display math
-- `Equation` - Numbered equation
+#### Mathematical Elements
+- `Math` - Inline math (`$...$`)
+- `DisplayMath` - Display math (`\[...\]`)
+- `Equation` - Numbered equation (`\begin{equation}`)
 
-### Lists and Tables
-- `Itemize` - Unordered list
-- `Enumerate` - Ordered list
-- `Item` - List item
-- `Table` - Table with caption
-- `Tabular` - Table body
-- `Tr` - Table row
-- `Td` - Table cell
+#### Lists and Tables
+- `Itemize` - Unordered list (`\begin{itemize}`)
+- `Enumerate` - Ordered list (`\begin{enumerate}`)
+- `Item` - List item (`\item`)
+- `Table` - Table with caption (`\begin{table}`)
+- `Tabular` - Table body (`\begin{tabular}`)
+- `Tr` - Table row (`\\`)
+- `Td` - Table cell (`&`)
 
-### TikZ Elements
-- `TikzDiagram` - TikZ diagram container
-- `TikzCircle` - Circle
-- `TikzRectangle` - Rectangle
-- `TikzLine` - Line
-- `TikzArrow` - Arrow
-- `TikzNode` - Text node
-- `TikzGrid` - Grid
-- `TikzAxis` - Coordinate axes
-- `TikzFlowchart` - Flowchart container
-- `TikzFlowchartNode` - Flowchart node
-- `TikzFlowchartArrow` - Flowchart arrow
+#### TikZ Components
+- `TikZDiagram` - TikZ diagram container (`\begin{tikzpicture}`)
+- `TikZCircle` - Circle (`\draw ... circle`)
+- `TikZRectangle` - Rectangle (`\draw ... rectangle`)
+- `TikZLine` - Line (`\draw ... --`)
+- `TikZArrow` - Arrow (`\draw ... --`)
+- `TikZNode` - Text node (`\node`)
+- `TikZGrid` - Grid (`\draw ... grid`)
+- `TikZAxis` - Coordinate axes (`\draw [->]`)
+- `TikZFlowchartNode` - Flowchart node with shapes
+- `TikZFlowchartArrow` - Flowchart arrow
+
+### Component Props
+
+#### TikZ Components
+```jsx
+<TikZCircle 
+  x={2}           // X coordinate
+  y={3}           // Y coordinate
+  radius={1.5}    // Circle radius
+  options="fill=blue!20, draw=blue, thick"  // TikZ options
+/>
+
+<TikZRectangle 
+  x={1}           // X coordinate
+  y={1}           // Y coordinate
+  width={3}       // Rectangle width
+  height={2}      // Rectangle height
+  options="fill=red!20, draw=red"
+/>
+
+<TikZLine 
+  from={[0, 0]}   // Start point [x, y]
+  to={[4, 4]}     // End point [x, y]
+  options="thick, green"
+/>
+
+<TikZNode 
+  x={2}           // X coordinate
+  y={3.5}         // Y coordinate
+  text="Label"    // Node text
+  options="above" // Node options
+/>
+```
+
+#### Document Components
+```jsx
+<Document>
+  {/* Document content */}
+</Document>
+
+<Section title="Section Title">
+  {/* Section content */}
+</Section>
+
+<Paragraph>
+  {/* Paragraph content */}
+</Paragraph>
+
+<Bold>Bold text</Bold>
+<Italic>Italic text</Italic>
+```
 
 ## Examples
 
-### JSON Renderer
+### Complete TikZ Document
 
-```javascript
-const jsonRenderer = ReactCustom.render(
-  <MyDocument />,
-  {
-    templates: {
-      document: (props, children) => JSON.stringify({ type: 'document', children }, null, 2),
-      section: (props, children) => JSON.stringify({ type: 'section', title: children[0] }, null, 2)
-    },
-    mapping: {
-      'Document': 'document',
-      'Section': 'section'
-    }
-  }
+```jsx
+const TikZExamplesDocument = () => (
+  <Document>
+    <Section title="TikZ Examples with JSX and Tagged Templates">
+      <Paragraph>
+        This document demonstrates TikZ components using JSX with tagged templates.
+        The components are created using the latex tagged template function and can be
+        used naturally with JSX syntax.
+      </Paragraph>
+      
+      <Paragraph>
+        <Bold>Geometric Shapes:</Bold> Circles, rectangles, lines, and arrows.
+      </Paragraph>
+      
+      <TikZDiagram width="10cm" height="8cm">
+        <TikZGrid xmin={0} ymin={0} xmax={6} ymax={6} step={1} options="gray!30" />
+        <TikZCircle x={2} y={2} radius={1} options="fill=blue!20, draw=blue" />
+        <TikZRectangle x={4} y={4} width={1.5} height={1} options="fill=red!20, draw=red" />
+        <TikZLine from={[1, 1]} to={[5, 5]} options="thick, green" />
+        <TikZArrow from={[1, 5]} to={[5, 1]} options="->, thick, purple" />
+        <TikZNode x={2} y={3.5} text="Circle" options="above" />
+        <TikZNode x={4.75} y={4.5} text="Rectangle" options="above" />
+        <TikZNode x={3} y={3} text="Line" options="above" />
+        <TikZNode x={3} y={3} text="Arrow" options="below" />
+      </TikZDiagram>
+    </Section>
+
+    <Section title="Mathematical Diagram">
+      <Paragraph>
+        This section shows a mathematical diagram with axes and a function plot.
+      </Paragraph>
+      
+      <TikZDiagram width="10cm" height="8cm">
+        <TikZAxis xmin={-3} ymin={-3} xmax={3} ymax={3} />
+        <TikZGrid xmin={-3} ymin={-3} xmax={3} ymax={3} step={0.5} options="gray!20" />
+        <TikZLine from={[-2, 4]} to={[-1.5, 2.25]} options="thick, blue" />
+        <TikZLine from={[-1.5, 2.25]} to={[-1, 1]} options="thick, blue" />
+        <TikZLine from={[-1, 1]} to={[-0.5, 0.25]} options="thick, blue" />
+        <TikZLine from={[-0.5, 0.25]} to={[0, 0]} options="thick, blue" />
+        <TikZLine from={[0, 0]} to={[0.5, 0.25]} options="thick, blue" />
+        <TikZLine from={[0.5, 0.25]} to={[1, 1]} options="thick, blue" />
+        <TikZLine from={[1, 1]} to={[1.5, 2.25]} options="thick, blue" />
+        <TikZLine from={[1.5, 2.25]} to={[2, 4]} options="thick, blue" />
+        <TikZCircle x={0} y={0} radius={0.05} options="fill=red" />
+        <TikZCircle x={1} y={1} radius={0.05} options="fill=red" />
+        <TikZCircle x={-1} y={1} radius={0.05} options="fill=red" />
+        <TikZNode x={2.5} y={3.5} text="$f(x) = x^2$" options="blue" />
+        <TikZNode x={0.2} y={0.2} text="$(0,0)$" options="red" />
+        <TikZNode x={1.2} y={1.2} text="$(1,1)$" options="red" />
+        <TikZNode x={-1.2} y={1.2} text="$(-1,1)$" options="red" />
+      </TikZDiagram>
+    </Section>
+  </Document>
 );
 ```
 
-### HTML Renderer
+### Running Examples
 
-```javascript
-const htmlRenderer = ReactCustom.render(
-  <MyDocument />,
-  {
-    templates: {
-      document: (props, children) => `<!DOCTYPE html>\n<html>\n<body>\n${children.join('\n')}\n</body>\n</html>`,
-      section: (props, children) => `<h1>${children[0]}</h1>\n${children.slice(1).join('')}`,
-      bold: (props, children) => `<strong>${children.join('')}</strong>`
-    },
-    mapping: {
-      'Document': 'document',
-      'Section': 'section',
-      'Bold': 'bold'
-    }
-  }
-);
-```
+```bash
+# Test the JSX LaTeX renderer
+npm run test:jsx-simple
 
-### CSV Renderer
-
-```javascript
-const csvRenderer = ReactCustom.render(
-  <MyDocument />,
-  {
-    templates: {
-      document: (props, children) => children.join('\n'),
-      section: (props, children) => `"Section","${children[0]}"`,
-      paragraph: (props, children) => `"Paragraph","${children.join('')}"`
-    },
-    mapping: {
-      'Document': 'document',
-      'Section': 'section',
-      'Paragraph': 'paragraph'
-    }
-  }
-);
+# View the generated LaTeX
+cat output-jsx-simple.tex
 ```
 
 ## Architecture
 
-The system uses React Reconciler to parse JSX into a tree structure, then applies templates and mapping to generate output:
+The system uses React Reconciler to parse JSX into a tree structure, then processes components with tagged templates:
 
 ```
-JSX → React Reconciler → Tree Structure → Templates + Mapping → Output
+JSX Components → React Reconciler → Tree Structure → LatexVisitor → LaTeX Output
 ```
 
 ### Core Components
 
-- **BaseRenderer** - Base class using React Reconciler
-- **TemplateRegistry** - Manages template registration and inheritance
-- **CustomVisitor** - Applies templates and mapping during tree traversal
-- **ReactLatex** - LaTeX renderer with predefined templates
-- **ReactMarkdown** - Markdown renderer with predefined templates
-- **ReactCustom** - Custom renderer for user-defined templates
+- **LatexComponents** - JSX components created with `latex` tagged templates
+- **LatexVisitor** - Processes the component tree and generates LaTeX
+- **latexRenderer** - Main renderer using React Reconciler
+- **Tagged Templates** - `latex` function for creating LaTeX components
 
-## Migration from Legacy API
+### How It Works
 
-The legacy `latexRenderer.js` is still available for backward compatibility:
-
-```javascript
-// Legacy API (still works)
-const { renderToLatex } = require('./latexRenderer');
-const latex = renderToLatex(<MyDocument />);
-
-// New API (recommended)
-const { ReactLatex } = require('./src');
-const latex = ReactLatex.render(<MyDocument />);
-```
+1. **JSX Components** - Write LaTeX documents using React components
+2. **Tagged Templates** - Components use `latex` function for LaTeX templates
+3. **React Reconciler** - Parses JSX into a tree structure
+4. **Visitor Pattern** - Traverses the tree and generates LaTeX
+5. **Output** - Valid LaTeX document ready for compilation
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Add your templates to `src/templates/`
+3. Add new LaTeX components to `components/LatexComponents.js`
 4. Add tests in `tests/`
 5. Submit a pull request
 
