@@ -20,7 +20,7 @@
     "example:tikz-simple": "node examples/simple-tikz-example.js",
     "example:tikz-jsx": "babel-node examples/jsx-tikz-example.jsx",
     "test:jsx-latex": "babel-node test-jsx-renderer.js",
-    "test:jsx-simple": "babel-node test-jsx-simple.js"
+    "test:jsx-simple": "babel-node API-Usage/test-jsx-simple.js"
   },
   "dependencies": {
     "react": "^18.2.0",
