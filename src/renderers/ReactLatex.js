@@ -11,7 +11,7 @@ class ReactLatex extends BaseRenderer {
 
     const templates = registry.get(templateName);
 
-    // Only PascalCase (uppercase) mappings
+    // Mapping para componentes que no usan tagged templates
     const defaultMapping = {
       Document: "document",
       Section: "section",
@@ -33,17 +33,18 @@ class ReactLatex extends BaseRenderer {
       P: "p",
       Div: "div",
       Span: "span",
-      tikzdiagram: "tikzdiagram",
-      tikzcircle: "tikzcircle",
-      tikzrectangle: "tikzrectangle",
-      tikzline: "tikzline",
-      tikzarrow: "tikzarrow",
-      tikznode: "tikznode",
-      tikzgrid: "tikzgrid",
-      tikzaxis: "tikzaxis",
-      tikzflowchart: "tikzflowchart",
-      tikzflowchartnode: "tikzflowchartnode",
-      tikzflowchartarrow: "tikzflowchartarrow",
+      // TikZ components
+      TikZDiagram: "tikzdiagram",
+      TikZCircle: "tikzcircle",
+      TikZRectangle: "tikzrectangle",
+      TikZLine: "tikzline",
+      TikZArrow: "tikzarrow",
+      TikZNode: "tikznode",
+      TikZGrid: "tikzgrid",
+      TikZAxis: "tikzaxis",
+      TikZFlowchart: "tikzflowchart",
+      TikZFlowchartNode: "tikzflowchartnode",
+      TikZFlowchartArrow: "tikzflowchartarrow",
     };
 
     const mapping = { ...defaultMapping, ...customMapping };
@@ -55,10 +56,40 @@ class ReactLatex extends BaseRenderer {
     return new CustomVisitor(this.templates, this.mapping, options);
   }
 
+  // Método para renderizar elementos React con tagged templates
+  renderElement(element) {
+    if (!element || typeof element.type !== "function") {
+      return this.render(element);
+    }
+
+    // Verificar si el componente tiene __latexTemplate
+    if (element.type.__latexTemplate) {
+      return element.type.__latexTemplate(element.props);
+    }
+
+    // Fallback al renderizado tradicional
+    return this.render(element);
+  }
+
   static render(jsxElement, templateName = "basic", customMapping = {}) {
     const renderer = new ReactLatex(templateName, customMapping);
+
+    // Si el elemento tiene __latexTemplate, usarlo directamente
+    if (
+      jsxElement &&
+      typeof jsxElement.type === "function" &&
+      jsxElement.type.__latexTemplate
+    ) {
+      return jsxElement.type.__latexTemplate(jsxElement.props);
+    }
+
     return renderer.render(jsxElement);
   }
 }
 
-module.exports = ReactLatex;
+exports.ReactLatex = ReactLatex;
+exports.ReactLatexVisitor = function (element) {
+  const renderer = new ReactLatex();
+  const visitor = renderer.createVisitor();
+  return visitor.visit(element);
+};
