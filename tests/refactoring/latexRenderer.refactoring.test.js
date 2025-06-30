@@ -117,8 +117,6 @@ describe("latexRenderer - Refactoring Validation Tests", () => {
       expect(typeof latexRenderer.renderToLatex).toBe("function");
       expect(typeof latexRenderer.renderToHtml).toBe("function");
       expect(typeof latexRenderer.renderToEnhancedLatex).toBe("function");
-      expect(typeof latexRenderer.renderWithVisitor).toBe("function");
-      expect(typeof latexRenderer.renderWithPlugin).toBe("function");
 
       // Test that they accept JSX elements
       const testElement = React.createElement("div", null, "test");

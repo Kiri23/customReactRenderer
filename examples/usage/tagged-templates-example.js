@@ -15,7 +15,7 @@ const {
   TikZLine,
   TikZNode,
 } = require("../components/LatexComponents");
-const { ReactLatexVisitor } = require("../src/renderers/ReactLatex");
+const { renderToLatex } = require("../../latexRenderer");
 
 // Ejemplo usando componentes con tagged templates usando React.createElement
 const LatexDocument = React.createElement(
@@ -99,8 +99,8 @@ const LatexDocument = React.createElement(
   ),
 );
 
-// Renderizar el documento
-const latexOutput = ReactLatexVisitor(LatexDocument);
+// Renderizar el documento usando el nuevo sistema
+const latexOutput = renderToLatex(LatexDocument);
 console.log("LaTeX Output:");
 console.log(latexOutput);
 

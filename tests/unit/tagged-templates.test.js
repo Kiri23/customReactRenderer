@@ -9,19 +9,17 @@ const {
   TikZCircle,
   latex,
 } = require("../../components/LatexComponents");
-const { ReactLatexVisitor } = require("../../src/renderers/ReactLatex");
+const { renderToLatex } = require("../../latexRenderer");
 
 describe("Tagged Templates LaTeX Components", () => {
-  test("should create components with __latexTemplate property", () => {
+  test("should create components as functions", () => {
     expect(typeof Document).toBe("function");
-    expect(typeof Document.__latexTemplate).toBe("function");
     expect(typeof Section).toBe("function");
-    expect(typeof Section.__latexTemplate).toBe("function");
   });
 
   test("should render basic components correctly", () => {
     const element = React.createElement(Bold, null, "Hello World");
-    const result = ReactLatexVisitor(element);
+    const result = renderToLatex(element);
     expect(result).toBe("\\textbf{Hello World}");
   });
 
@@ -35,7 +33,7 @@ describe("Tagged Templates LaTeX Components", () => {
       React.createElement(Italic, null, "italic"),
       " text.",
     );
-    const result = ReactLatexVisitor(element);
+    const result = renderToLatex(element);
     expect(result).toContain("\\textbf{bold}");
     expect(result).toContain("\\textit{italic}");
   });
@@ -47,7 +45,7 @@ describe("Tagged Templates LaTeX Components", () => {
       radius: 1.5,
       options: "fill=blue",
     });
-    const result = ReactLatexVisitor(element);
+    const result = renderToLatex(element);
     expect(result).toBe("\\draw[fill=blue] (2,3) circle (1.5cm);\n");
   });
 
@@ -67,7 +65,7 @@ describe("Tagged Templates LaTeX Components", () => {
         ),
       ),
     );
-    const result = ReactLatexVisitor(element);
+    const result = renderToLatex(element);
     expect(result).toContain("\\documentclass{article}");
     expect(result).toContain("\\section{Test Section}");
     expect(result).toContain("$E = mc^2$");
@@ -86,12 +84,8 @@ describe("Tagged Templates LaTeX Components", () => {
     );
 
     expect(typeof CustomComponent).toBe("function");
-    expect(typeof CustomComponent.__latexTemplate).toBe("function");
 
-    const result = CustomComponent.__latexTemplate({
-      value: "test",
-      children: "content",
-    });
+    const result = renderToLatex(element);
     expect(result).toContain("\\customcommand{test}");
     expect(result).toContain("content");
   });
@@ -103,13 +97,13 @@ describe("Tagged Templates LaTeX Components", () => {
       radius: 1,
       // options is optional
     });
-    const result = ReactLatexVisitor(element);
+    const result = renderToLatex(element);
     expect(result).toBe("\\draw (1,1) circle (1cm);\n");
   });
 
   test("should handle empty children", () => {
     const element = React.createElement(Bold, null);
-    const result = ReactLatexVisitor(element);
+    const result = renderToLatex(element);
     expect(result).toBe("\\textbf{}");
   });
 });

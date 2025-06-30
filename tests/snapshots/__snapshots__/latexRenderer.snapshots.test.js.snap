@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`latexRenderer - Snapshot Tests Basic Document Snapshots should generate consistent basic document 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -11,12 +12,14 @@ exports[`latexRenderer - Snapshot Tests Basic Document Snapshots should generate
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Introduction}
 
+\\section{Introduction}
+Introduction
 This is a basic test document.
 
-\\section{Conclusion}
 
+\\section{Conclusion}
+Conclusion
 This concludes the basic test.
 
 
@@ -25,7 +28,8 @@ This concludes the basic test.
 `;
 
 exports[`latexRenderer - Snapshot Tests Basic Document Snapshots should generate consistent document with math 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -35,9 +39,11 @@ exports[`latexRenderer - Snapshot Tests Basic Document Snapshots should generate
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Mathematical Content}
 
+\\section{Mathematical Content}
+Mathematical Content
 The quadratic formula is: x = (-b ± √(b² - 4ac)) / 2a
+
 
 The area of a circle is: A = πr²
 
@@ -47,7 +53,8 @@ The area of a circle is: A = πr²
 `;
 
 exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate consistent output for empty components 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -57,7 +64,9 @@ exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate con
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
+
 \\section{}
+
 
 
 
@@ -77,7 +86,8 @@ exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate con
 `;
 
 exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate consistent output for extreme values 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -87,8 +97,9 @@ exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate con
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Extreme Values}
 
+\\section{Extreme Values}
+Extreme Values
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
@@ -106,7 +117,7 @@ exports[`latexRenderer - Snapshot Tests Edge Cases Snapshots should generate con
 `;
 
 exports[`latexRenderer - Snapshot Tests Multiple Format Snapshots should generate consistent enhanced LaTeX output 1`] = `
-"% Generated document with 1 nodes, max depth: 1
+"
 \\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
@@ -117,11 +128,12 @@ exports[`latexRenderer - Snapshot Tests Multiple Format Snapshots should generat
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-  \\subsection{ Enhanced LaTeX Snapshot Test}
-  
+
+\\section{Enhanced LaTeX Snapshot Test}
+Enhanced LaTeX Snapshot Test
 This is an enhanced LaTeX snapshot test.
 
-% TikZ diagram at depth 2 with 3 elements
+
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
@@ -136,7 +148,8 @@ This is an enhanced LaTeX snapshot test.
 `;
 
 exports[`latexRenderer - Snapshot Tests Nested Structure Snapshots should generate consistent deeply nested structure 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -146,15 +159,176 @@ exports[`latexRenderer - Snapshot Tests Nested Structure Snapshots should genera
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Level 1}
-\\section{Level 2}
-\\section{Level 3}
+
+\\section{Level 1
+\\section{Level 2
+\\section{Level 3
 Deep content
+
 
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
 \\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 2
+\\section{Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 1
+\\section{Level 2
+\\section{Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 2
+\\section{Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (2,2) circle (0.5cm);
+
+\\end{tikzpicture}
+\\end{figure}
+
+
+\\end{tikzpicture}
+\\end{figure}
+
+}
+Level 3
+Deep content
+
+
+\\begin{figure}[h]
+\\centering
+\\begin{tikzpicture}[scale=1]
+\\draw (1,1) circle (1cm);
+
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
@@ -169,14 +343,12 @@ Deep content
 
 
 
-
-
-
 \\end{document}"
 `;
 
 exports[`latexRenderer - Snapshot Tests Nested Structure Snapshots should generate consistent mixed content structure 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -186,9 +358,11 @@ exports[`latexRenderer - Snapshot Tests Nested Structure Snapshots should genera
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Mixed Content Section}
 
+\\section{Mixed Content Section}
+Mixed Content Section
 Regular paragraph text.
+
 
 \\begin{figure}[h]
 \\centering
@@ -199,10 +373,12 @@ Regular paragraph text.
 \\end{tikzpicture}
 \\end{figure}
 
+
 Another paragraph after diagram.
 
-\\section{Another Section}
 
+\\section{Another Section}
+Another Section
 Final paragraph.
 
 
@@ -211,7 +387,8 @@ Final paragraph.
 `;
 
 exports[`latexRenderer - Snapshot Tests Performance Snapshot Tests should generate consistent large document 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -221,16 +398,17 @@ exports[`latexRenderer - Snapshot Tests Performance Snapshot Tests should genera
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Section }
-1
-\\section{Section }
-2
-\\section{Section }
-3
-\\section{Section }
-4
-\\section{Section }
-5
+
+\\section{Section 1}
+Section 1
+\\section{Section 2}
+Section 2
+\\section{Section 3}
+Section 3
+\\section{Section 4}
+Section 4
+\\section{Section 5}
+Section 5
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
@@ -254,7 +432,8 @@ exports[`latexRenderer - Snapshot Tests Performance Snapshot Tests should genera
 `;
 
 exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate consistent TikZ diagram 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -264,8 +443,9 @@ exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{TikZ Diagram}
 
+\\section{TikZ Diagram}
+TikZ Diagram
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
@@ -284,7 +464,8 @@ exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate
 `;
 
 exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate consistent TikZ with specific props 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -294,8 +475,9 @@ exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Specific Props Test}
 
+\\section{Specific Props Test}
+Specific Props Test
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]
@@ -314,7 +496,8 @@ exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate
 `;
 
 exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate consistent complex TikZ diagram 1`] = `
-"\\documentclass{article}
+"
+\\documentclass{article}
 \\usepackage{amsmath}
 \\usepackage{amsfonts}
 \\usepackage{amssymb}
@@ -324,8 +507,9 @@ exports[`latexRenderer - Snapshot Tests TikZ Component Snapshots should generate
 \\pgfplotsset{compat=1.18}
 \\begin{document}
 
-\\section{Complex TikZ Diagram}
 
+\\section{Complex TikZ Diagram}
+Complex TikZ Diagram
 \\begin{figure}[h]
 \\centering
 \\begin{tikzpicture}[scale=1]

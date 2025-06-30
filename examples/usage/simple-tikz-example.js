@@ -15,7 +15,7 @@ const {
   Paragraph,
   Bold,
 } = require("./simple-latex-components");
-const { ReactLatexVisitor } = require("../src/renderers/ReactLatex");
+const { renderToLatex } = require("../../latexRenderer");
 
 // Ejemplo simple de TikZ usando tagged templates
 const TikZExample = React.createElement(
@@ -158,8 +158,8 @@ const TikZExample = React.createElement(
   ),
 );
 
-// Renderizar el documento
-const latexOutput = ReactLatexVisitor(TikZExample);
+// Renderizar el documento usando el nuevo sistema
+const latexOutput = renderToLatex(TikZExample);
 console.log("TikZ LaTeX Output:");
 console.log(latexOutput);
 

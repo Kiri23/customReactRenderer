@@ -1,4 +1,5 @@
 const React = require("react");
+const { renderToLatex } = require("../../latexRenderer");
 
 // Crear componentes básicos sin contexto
 function latex(strings, ...interpolations) {
@@ -53,10 +54,6 @@ const TikZCircle = latex`\\draw${(props) =>
 ) => props.x},${(props) => props.y}) circle (${(props) => props.radius}cm);
 `;
 
-// Crear visitor simple
-const CustomVisitor = require("../src/visitors/CustomVisitor");
-const visitor = new CustomVisitor({}, {});
-
 // Ejemplo usando componentes con tagged templates
 const LatexDocument = React.createElement(
   Document,
@@ -94,7 +91,7 @@ const LatexDocument = React.createElement(
   ),
 );
 
-// Renderizar el documento
-const latexOutput = visitor.visit(LatexDocument);
+// Renderizar el documento usando el nuevo sistema
+const latexOutput = renderToLatex(LatexDocument);
 console.log("LaTeX Output:");
 console.log(latexOutput);
