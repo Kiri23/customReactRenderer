@@ -1,41 +1,111 @@
 # API Usage Examples
 
-This directory contains various examples and tests demonstrating how to use the JSX LaTeX Renderer API.
+This directory contains examples demonstrating how to use the JSX LaTeX Renderer API with the new simplified architecture.
+
+## Overview
+
+The API now uses a simplified architecture with:
+- **RendererCore + React Reconciler**: Robust JSX processing
+- **Simple Visitor Pattern**: Extracts LaTeX from `latex-text` components
+- **Tagged Templates**: JSX components that generate LaTeX directly
+- **Single API**: `renderToLatex()` function for all rendering needs
 
 ## Test Files
 
-### Basic Usage
-- `test-jsx-simple.js` - Simple JSX to LaTeX rendering
-- `test-jsx-renderer.js` - Basic renderer functionality
-- `test-latex-components.js` - LaTeX component definitions with tagged templates
-- `test-latex-pure.js` - Pure LaTeX generation without JSX
+### Core Examples
+- `test-jsx-simple.js` - Simple JSX to LaTeX rendering with TikZ diagrams
+- `test-jsx-renderer.js` - Basic renderer functionality demonstration
+- `jsx-tagged-template.jsx` - Complete JSX document with TikZ components
 
-### TikZ Examples
-- `test-tikz-direct.js` - Direct TikZ generation
-- `test-tikz-tagged-templates.js` - TikZ with tagged templates
-- `test-tikz-simple.js` - Simple TikZ diagrams
-- `testTikZ.js` - Comprehensive TikZ examples
+### What Each Example Demonstrates
 
-### JSX Examples
-- `jsx-tagged-template.jsx` - JSX with tagged templates demonstration
+#### `test-jsx-simple.js`
+- Basic JSX to LaTeX conversion
+- TikZ diagram generation with geometric shapes
+- Mathematical diagrams with axes and functions
+- Text formatting (bold, italic, math expressions)
+- Output saved to `test-output/jsx-simple.tex`
+
+#### `test-jsx-renderer.js`
+- Core renderer functionality
+- Same content as simple test but different output file
+- Output saved to `test-output/output-jsx-latex.tex`
+
+#### `jsx-tagged-template.jsx`
+- Complete LaTeX document structure
+- Multiple TikZ diagrams with different complexity
+- Nested JSX components
+- Mathematical expressions and text formatting
+- Demonstrates the full power of the tagged templates approach
 
 ## Running Examples
 
 ```bash
-# Run a specific test
-node "API Usage/test-jsx-simple.js"
+# Run the simple JSX example
+yarn test:jsx-simple
 
-# Run all tests
-npm run test:api-usage
+# Run the basic renderer example
+yarn test:jsx-latex
+
+# Run with babel-node directly
+yarn babel-node API-Usage/test-jsx-simple.js
+yarn babel-node API-Usage/test-jsx-renderer.js
+```
+
+## Available Scripts
+
+The following scripts are available in `package.json`:
+
+```bash
+# Test scripts
+yarn test:jsx-simple    # Run simple JSX example
+yarn test:jsx-latex     # Run basic renderer example
+
+# Development scripts
+yarn test               # Run all tests
+yarn test:watch         # Run tests in watch mode
+yarn test:coverage      # Run tests with coverage
 ```
 
 ## Output
 
-Most examples generate `.tex` files in the root directory or `test-output/` directory. Check the individual files for specific output locations.
+Examples generate `.tex` files in the `test-output/` directory:
+- `test-output/jsx-simple.tex` - Output from simple example
+- `test-output/output-jsx-latex.tex` - Output from renderer example
+
+## Architecture
+
+### New Simplified Flow
+1. **JSX Components**: Created using tagged templates from `LatexComponents.js`
+2. **React Reconciler**: Processes JSX tree using `RendererCore`
+3. **Simple Visitor**: Extracts LaTeX content from `latex-text` components
+4. **Output**: Clean LaTeX code ready for compilation
+
+### Key Components
+- `latexRenderer.js` - Main API entry point
+- `src/core/RendererCore.js` - React Reconciler integration
+- `components/LatexComponents.js` - Tagged template components
+- `components/TikZComponents.js` - TikZ-specific components
 
 ## Learning Path
 
-1. Start with `test-jsx-simple.js` for basic understanding
-2. Move to `test-latex-components.js` for component definitions
-3. Explore `test-tikz-simple.js` for TikZ diagrams
-4. Try `jsx-tagged-template.jsx` for advanced usage 
+1. **Start with `test-jsx-simple.js`** - Basic understanding of JSX to LaTeX conversion
+2. **Examine `jsx-tagged-template.jsx`** - See how components are structured
+3. **Try `test-jsx-renderer.js`** - Understand the renderer functionality
+4. **Explore the components** - Check `LatexComponents.js` and `TikZComponents.js`
+
+## Requirements
+
+- Node.js 14+
+- Yarn package manager
+- Babel for JSX transformation
+
+## Installation
+
+```bash
+# Install dependencies
+yarn install
+
+# Run examples
+yarn test:jsx-simple
+``` 
