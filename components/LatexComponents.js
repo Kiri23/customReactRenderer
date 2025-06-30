@@ -1,5 +1,4 @@
 const React = require("react");
-const { useLatexConfig } = require("../contexts/LatexConfigContext");
 
 // Utilidad para convertir cualquier valor a string LaTeX
 function toLatexString(value) {
@@ -234,98 +233,6 @@ const TikZFlowchartArrow = latex`\\draw${(props) =>
   props.to[0]},${(props) => props.to[1]});
 `;
 
-// Special components that use context
-const ConfigurableMath = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showMath")) {
-    return null;
-  }
-
-  return React.createElement("Math", props, children);
-};
-
-const ConfigurableTable = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showTables")) {
-    return null;
-  }
-
-  return React.createElement("Table", props, children);
-};
-
-const ConfigurableList = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showLists")) {
-    return null;
-  }
-
-  return React.createElement("Itemize", props, children);
-};
-
-// Document structure components
-const Abstract = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showAbstract")) {
-    return null;
-  }
-
-  return React.createElement(
-    "Paragraph",
-    props,
-    React.createElement("Bold", null, "Abstract:"),
-    " ",
-    children,
-  );
-};
-
-const Keywords = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showKeywords")) {
-    return null;
-  }
-
-  return React.createElement(
-    "Paragraph",
-    props,
-    React.createElement("Bold", null, "Keywords:"),
-    " ",
-    children,
-  );
-};
-
-const References = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showReferences")) {
-    return null;
-  }
-
-  return React.createElement(
-    "Section",
-    { title: "References", ...props },
-    children,
-  );
-};
-
-const Appendix = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-
-  if (!isVisible("showAppendix")) {
-    return null;
-  }
-
-  return React.createElement(
-    "Section",
-    { title: "Appendix", ...props },
-    children,
-  );
-};
-
 module.exports = {
   // Basic components
   Document,
@@ -340,13 +247,11 @@ module.exports = {
   Math,
   DisplayMath,
   Equation,
-  ConfigurableMath,
 
   // List components
   Itemize,
   Enumerate,
   Item,
-  ConfigurableList,
 
   // Table components
   Table,
@@ -355,14 +260,7 @@ module.exports = {
   Td,
   P,
   Div,
-  Span,
-  ConfigurableTable,
-
-  // Document structure
-  Abstract,
-  Keywords,
-  References,
-  Appendix,
+  Span, 
 
   // TikZ components
   TikZDiagram,

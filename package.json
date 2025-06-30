@@ -14,12 +14,7 @@
     "start": "babel-node index.jsx",
     "latex": "babel-node latexRenderer.js",
     "validate": "npm run test:unit && npm run test:integration && npm run test:snapshots",
-    "example:basic": "babel-node examples/basic-usage.jsx",
-    "example:custom": "babel-node examples/custom-renderer.jsx",
-    "example:tikz": "babel-node examples/tikz-example.jsx",
-    "example:tikz-simple": "node examples/simple-tikz-example.js",
-    "example:tikz-jsx": "babel-node examples/jsx-tikz-example.jsx",
-    "test:jsx-latex": "babel-node test-jsx-renderer.js",
+    "test:jsx-latex": "babel-node API-Usage/test-jsx-renderer.js",
     "test:jsx-simple": "babel-node API-Usage/test-jsx-simple.js"
   },
   "dependencies": {

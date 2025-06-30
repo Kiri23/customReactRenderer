@@ -1,5 +1,5 @@
 const React = require("react");
-const { renderToLatex } = require("./latexRenderer.js");
+const { renderToLatex } = require("../latexRenderer.js");
 const TikZJSXExample = require("./jsx-tagged-template.jsx");
 const fs = require("fs");
 
@@ -16,11 +16,11 @@ try {
   console.log("=".repeat(60));
 
   // Save to file
-  fs.writeFileSync("output-jsx-latex.tex", latexOutput);
-  console.log("\n✅ LaTeX saved to: output-jsx-latex.tex");
+  fs.writeFileSync("test-output/output-jsx-latex.tex", latexOutput);
+  console.log("\n✅ LaTeX saved to: test-output/output-jsx-latex.tex");
   console.log(
     "📄 File size:",
-    fs.statSync("output-jsx-latex.tex").size,
+    fs.statSync("test-output/output-jsx-latex.tex").size,
     "bytes",
   );
 } catch (error) {

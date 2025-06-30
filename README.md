@@ -194,24 +194,31 @@ const ComplexDiagram = () => (
 
 ```bash
 # Test the JSX LaTeX renderer
-npm run test:jsx-simple
+yarn test:jsx-simple
 
 # View the generated LaTeX
-cat output-jsx-simple.tex
+cat test-output/jsx-simple.tex
 ```
 
 ## How It Works
 
-The system uses React Reconciler to parse JSX into a tree structure, then processes components with tagged templates:
+The system uses a simplified architecture with React Reconciler and tagged templates:
 
 ```
-JSX Components → React Reconciler → Tree Structure → LatexVisitor → LaTeX Output
+JSX Components → React Reconciler → Simple Visitor → LaTeX Output
 ```
 
 ### Core Components
 - **LatexComponents** - JSX components created with `latex` tagged templates
-- **LatexVisitor** - Processes the component tree and generates LaTeX
-- **latexRenderer** - Main renderer using React Reconciler
+- **RendererCore** - React Reconciler integration for robust JSX processing
+- **latexRenderer** - Main API with `renderToLatex()` function
+- **Simple Visitor** - Extracts LaTeX from `latex-text` components
+
+### Architecture Benefits
+- **Simplified**: Single API function instead of multiple renderers
+- **Robust**: Uses React Reconciler for reliable JSX processing
+- **Maintainable**: Clean separation between components and rendering
+- **Extensible**: Easy to add new components with tagged templates
 
 ## Contributing
 

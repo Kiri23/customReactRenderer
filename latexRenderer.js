@@ -140,45 +140,9 @@ function renderToLatex(element) {
   return processJSXToLatex(element);
 }
 
-function renderToHtml(element) {
-  // TODO: Implement HTML rendering without visitor
-  return processJSXToLatex(element);
-}
-
-function renderToEnhancedLatex(element) {
-  // TODO: Implement enhanced LaTeX rendering without visitor
-  return processJSXToLatex(element);
-}
-
-// Plugin-aware render function
-function renderWithPlugin(element, visitorName) {
-  // TODO: Implement plugin rendering without visitor
-  return processJSXToLatex(element);
-}
-
-// Plugin management functions
-function registerPlugin(name, plugin) {
-  return pluginManager.registerPlugin(name, plugin);
-}
-
-function getAvailableVisitors() {
-  return pluginManager.getAvailableVisitors();
-}
-
-function listPlugins() {
-  return pluginManager.listPlugins();
-}
 
 module.exports = {
   renderToLatex,
-  renderToHtml,
-  renderToEnhancedLatex,
-  renderWithPlugin,
-  registerPlugin,
-  getAvailableVisitors,
-  listPlugins,
-  pluginManager,
-  rendererCore,
   visualizeJSXTree,
   processJSXToLatex,
 };
