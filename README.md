@@ -1,27 +1,57 @@
 # JSX LaTeX Renderer
 
-A powerful system for creating LaTeX documents using familiar JSX syntax, similar to styled-components but for scientific documents. Write LaTeX documents with React components and tagged templates.
+Write LaTeX documents using familiar JSX syntax, like styled-components but for scientific documents.
 
-## Features
+## What You Get
 
-- **JSX Syntax** - Write LaTeX documents using familiar React components
-- **Tagged Templates** - Components created with `latex` tagged template function
-- **Nested Structure** - Natural component composition like HTML
-- **TikZ Support** - Full TikZ diagram components with props
-- **Mathematical Elements** - Math, equations, and scientific notation
-- **Type Safety** - Props with proper typing for LaTeX elements
-- **React Reconciler** - Built on React's reconciliation system
+Write this JSX:
+```jsx
+<Document>
+  <Section title="TikZ Examples">
+    <Paragraph>This is a test with <Bold>bold text</Bold>.</Paragraph>
+    <TikZDiagram>
+      <TikZCircle x={2} y={2} radius={1} options="fill=blue" />
+      <TikZRectangle x={4} y={4} width={1.5} height={1} options="fill=red" />
+    </TikZDiagram>
+  </Section>
+</Document>
+```
 
-## Installation
+Get this LaTeX:
+```latex
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
 
-```bash
-yarn add custom-react-renderer
+\section{TikZ Examples}
+
+This is a test with \textbf{bold text}.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1]
+\draw[fill=blue] (2,2) circle (1cm);
+\draw[fill=red] (4,4) rectangle (5.5,5);
+\end{tikzpicture}
+\end{figure}
+
+\end{document}
 ```
 
 ## Quick Start
 
-### Basic JSX LaTeX Document
+### Installation
+```bash
+yarn add custom-react-renderer
+```
 
+### Basic Example
 ```jsx
 const React = require('react');
 const {
@@ -30,26 +60,17 @@ const {
   Paragraph,
   Bold,
   TikZDiagram,
-  TikZCircle,
-  TikZRectangle,
-  TikZLine
+  TikZCircle
 } = require('./components/LatexComponents');
 
 const MyDocument = () => (
   <Document>
-    <Section title="TikZ Examples with JSX">
+    <Section title="My First LaTeX Document">
       <Paragraph>
-        This document demonstrates TikZ components using JSX with tagged templates.
+        Hello <Bold>LaTeX</Bold> from JSX!
       </Paragraph>
-      
-      <Paragraph>
-        <Bold>Geometric Shapes:</Bold> Circles, rectangles, and lines.
-      </Paragraph>
-      
-      <TikZDiagram width="10cm" height="8cm">
+      <TikZDiagram>
         <TikZCircle x={2} y={2} radius={1} options="fill=blue!20, draw=blue" />
-        <TikZRectangle x={4} y={4} width={1.5} height={1} options="fill=red!20, draw=red" />
-        <TikZLine from={[1, 1]} to={[5, 5]} options="thick, green" />
       </TikZDiagram>
     </Section>
   </Document>
@@ -61,21 +82,17 @@ const latex = renderToLatex(<MyDocument />);
 console.log(latex);
 ```
 
-### Mathematical Document
+## Examples
 
+### Mathematical Document
 ```jsx
-const MathematicalDocument = () => (
+const MathDocument = () => (
   <Document>
     <Section title="Mathematical Examples">
       <Paragraph>
-        Here are some mathematical expressions:
+        Einstein's equation: <Bold>E = mc²</Bold>
       </Paragraph>
-      
-      <Paragraph>
-        Einstein's famous equation: <Bold>E = mc²</Bold>
-      </Paragraph>
-      
-      <TikZDiagram width="10cm" height="8cm">
+      <TikZDiagram>
         <TikZAxis xmin={-3} ymin={-3} xmax={3} ymax={3} />
         <TikZGrid xmin={-3} ymin={-3} xmax={3} ymax={3} step={0.5} options="gray!20" />
         <TikZLine from={[-2, 4]} to={[2, 4]} options="thick, blue" />
@@ -86,44 +103,59 @@ const MathematicalDocument = () => (
 );
 ```
 
+### Complex TikZ Diagram
+```jsx
+const ComplexDiagram = () => (
+  <Document>
+    <Section title="Complex TikZ Example">
+      <TikZDiagram width="10cm" height="8cm">
+        <TikZGrid xmin={0} ymin={0} xmax={6} ymax={6} step={1} options="gray!30" />
+        <TikZCircle x={2} y={2} radius={1} options="fill=blue!20, draw=blue" />
+        <TikZRectangle x={4} y={4} width={1.5} height={1} options="fill=red!20, draw=red" />
+        <TikZLine from={[1, 1]} to={[5, 5]} options="thick, green" />
+        <TikZArrow from={[1, 5]} to={[5, 1]} options="->, thick, purple" />
+        <TikZNode x={2} y={3.5} text="Circle" options="above" />
+        <TikZNode x={4.75} y={4.5} text="Rectangle" options="above" />
+      </TikZDiagram>
+    </Section>
+  </Document>
+);
+```
+
 ## API Reference
 
-### Core Components
-
-#### Document Structure
-- `Document` - Main document wrapper with LaTeX preamble
-- `Section` - Section with title and content
-- `Subsection` - Subsection with title and content
+### Document Structure
+- `Document` - Main document wrapper
+- `Section` - Section with title
+- `Subsection` - Subsection with title  
 - `Paragraph` - Paragraph text
-- `Bold` - Bold text (`\textbf{}`)
-- `Italic` - Italic text (`\textit{}`)
-- `Underline` - Underlined text (`\underline{}`)
+- `Bold` - Bold text
+- `Italic` - Italic text
+- `Underline` - Underlined text
 
-#### Mathematical Elements
-- `Math` - Inline math (`$...$`)
-- `DisplayMath` - Display math (`\[...\]`)
-- `Equation` - Numbered equation (`\begin{equation}`)
+### Mathematical Elements
+- `Math` - Inline math
+- `DisplayMath` - Display math
+- `Equation` - Numbered equation
 
-#### Lists and Tables
-- `Itemize` - Unordered list (`\begin{itemize}`)
-- `Enumerate` - Ordered list (`\begin{enumerate}`)
-- `Item` - List item (`\item`)
-- `Table` - Table with caption (`\begin{table}`)
-- `Tabular` - Table body (`\begin{tabular}`)
-- `Tr` - Table row (`\\`)
-- `Td` - Table cell (`&`)
+### Lists and Tables
+- `Itemize` - Unordered list
+- `Enumerate` - Ordered list
+- `Item` - List item
+- `Table` - Table with caption
+- `Tabular` - Table body
+- `Tr` - Table row
+- `Td` - Table cell
 
-#### TikZ Components
-- `TikZDiagram` - TikZ diagram container (`\begin{tikzpicture}`)
-- `TikZCircle` - Circle (`\draw ... circle`)
-- `TikZRectangle` - Rectangle (`\draw ... rectangle`)
-- `TikZLine` - Line (`\draw ... --`)
-- `TikZArrow` - Arrow (`\draw ... --`)
-- `TikZNode` - Text node (`\node`)
-- `TikZGrid` - Grid (`\draw ... grid`)
-- `TikZAxis` - Coordinate axes (`\draw [->]`)
-- `TikZFlowchartNode` - Flowchart node with shapes
-- `TikZFlowchartArrow` - Flowchart arrow
+### TikZ Components
+- `TikZDiagram` - TikZ diagram container
+- `TikZCircle` - Circle
+- `TikZRectangle` - Rectangle
+- `TikZLine` - Line
+- `TikZArrow` - Arrow
+- `TikZNode` - Text node
+- `TikZGrid` - Grid
+- `TikZAxis` - Coordinate axes
 
 ### Component Props
 
@@ -158,85 +190,7 @@ const MathematicalDocument = () => (
 />
 ```
 
-#### Document Components
-```jsx
-<Document>
-  {/* Document content */}
-</Document>
-
-<Section title="Section Title">
-  {/* Section content */}
-</Section>
-
-<Paragraph>
-  {/* Paragraph content */}
-</Paragraph>
-
-<Bold>Bold text</Bold>
-<Italic>Italic text</Italic>
-```
-
-## Examples
-
-### Complete TikZ Document
-
-```jsx
-const TikZExamplesDocument = () => (
-  <Document>
-    <Section title="TikZ Examples with JSX and Tagged Templates">
-      <Paragraph>
-        This document demonstrates TikZ components using JSX with tagged templates.
-        The components are created using the latex tagged template function and can be
-        used naturally with JSX syntax.
-      </Paragraph>
-      
-      <Paragraph>
-        <Bold>Geometric Shapes:</Bold> Circles, rectangles, lines, and arrows.
-      </Paragraph>
-      
-      <TikZDiagram width="10cm" height="8cm">
-        <TikZGrid xmin={0} ymin={0} xmax={6} ymax={6} step={1} options="gray!30" />
-        <TikZCircle x={2} y={2} radius={1} options="fill=blue!20, draw=blue" />
-        <TikZRectangle x={4} y={4} width={1.5} height={1} options="fill=red!20, draw=red" />
-        <TikZLine from={[1, 1]} to={[5, 5]} options="thick, green" />
-        <TikZArrow from={[1, 5]} to={[5, 1]} options="->, thick, purple" />
-        <TikZNode x={2} y={3.5} text="Circle" options="above" />
-        <TikZNode x={4.75} y={4.5} text="Rectangle" options="above" />
-        <TikZNode x={3} y={3} text="Line" options="above" />
-        <TikZNode x={3} y={3} text="Arrow" options="below" />
-      </TikZDiagram>
-    </Section>
-
-    <Section title="Mathematical Diagram">
-      <Paragraph>
-        This section shows a mathematical diagram with axes and a function plot.
-      </Paragraph>
-      
-      <TikZDiagram width="10cm" height="8cm">
-        <TikZAxis xmin={-3} ymin={-3} xmax={3} ymax={3} />
-        <TikZGrid xmin={-3} ymin={-3} xmax={3} ymax={3} step={0.5} options="gray!20" />
-        <TikZLine from={[-2, 4]} to={[-1.5, 2.25]} options="thick, blue" />
-        <TikZLine from={[-1.5, 2.25]} to={[-1, 1]} options="thick, blue" />
-        <TikZLine from={[-1, 1]} to={[-0.5, 0.25]} options="thick, blue" />
-        <TikZLine from={[-0.5, 0.25]} to={[0, 0]} options="thick, blue" />
-        <TikZLine from={[0, 0]} to={[0.5, 0.25]} options="thick, blue" />
-        <TikZLine from={[0.5, 0.25]} to={[1, 1]} options="thick, blue" />
-        <TikZLine from={[1, 1]} to={[1.5, 2.25]} options="thick, blue" />
-        <TikZLine from={[1.5, 2.25]} to={[2, 4]} options="thick, blue" />
-        <TikZCircle x={0} y={0} radius={0.05} options="fill=red" />
-        <TikZCircle x={1} y={1} radius={0.05} options="fill=red" />
-        <TikZCircle x={-1} y={1} radius={0.05} options="fill=red" />
-        <TikZNode x={2.5} y={3.5} text="$f(x) = x^2$" options="blue" />
-        <TikZNode x={0.2} y={0.2} text="$(0,0)$" options="red" />
-        <TikZNode x={1.2} y={1.2} text="$(1,1)$" options="red" />
-        <TikZNode x={-1.2} y={1.2} text="$(-1,1)$" options="red" />
-      </TikZDiagram>
-    </Section>
-  </Document>
-);
-```
-
-### Running Examples
+## Running Examples
 
 ```bash
 # Test the JSX LaTeX renderer
@@ -246,7 +200,7 @@ npm run test:jsx-simple
 cat output-jsx-simple.tex
 ```
 
-## Architecture
+## How It Works
 
 The system uses React Reconciler to parse JSX into a tree structure, then processes components with tagged templates:
 
@@ -255,19 +209,9 @@ JSX Components → React Reconciler → Tree Structure → LatexVisitor → LaTe
 ```
 
 ### Core Components
-
 - **LatexComponents** - JSX components created with `latex` tagged templates
 - **LatexVisitor** - Processes the component tree and generates LaTeX
 - **latexRenderer** - Main renderer using React Reconciler
-- **Tagged Templates** - `latex` function for creating LaTeX components
-
-### How It Works
-
-1. **JSX Components** - Write LaTeX documents using React components
-2. **Tagged Templates** - Components use `latex` function for LaTeX templates
-3. **React Reconciler** - Parses JSX into a tree structure
-4. **Visitor Pattern** - Traverses the tree and generates LaTeX
-5. **Output** - Valid LaTeX document ready for compilation
 
 ## Contributing
 
