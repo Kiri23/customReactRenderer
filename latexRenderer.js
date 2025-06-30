@@ -1,13 +1,61 @@
 const React = require("react");
-const LatexVisitor = require("./visitors/LatexVisitor");
-const HtmlVisitor = require("./visitors/HtmlVisitor");
-const EnhancedLatexVisitor = require("./visitors/EnhancedLatexVisitor");
 const PluginManager = require("./plugins/PluginManager");
 const RendererCore = require("./src/core/RendererCore");
 
 // Initialize core renderer and plugin manager
 const rendererCore = new RendererCore();
 const pluginManager = new PluginManager();
+
+/**
+ * Simple LaTeX visitor that extracts LaTeX content from JSX
+ */
+const latexVisitor = {
+  visit(node, context = {}) {
+    if (!node) {
+      return "";
+    }
+
+    // Handle text nodes
+    if (typeof node === "string") {
+      return node;
+    }
+
+    // Handle arrays
+    if (Array.isArray(node)) {
+      return node.map((child) => this.visit(child, context)).join("");
+    }
+
+    // Handle objects with children (from React Reconciler)
+    if (node && typeof node === "object" && node.children) {
+      // Process all children recursively
+      return node.children.map((child) => this.visit(child, context)).join("");
+    }
+
+    // Handle React elements that might have been processed by the reconciler
+    if (node && node.type) {
+      // If it's a latex-text component, extract the content
+      if (node.type === "latex-text") {
+        return this.visit(node.children || node.props?.children, context);
+      }
+
+      // For other components, process their children
+      if (node.children) {
+        return this.visit(node.children, context);
+      }
+    }
+
+    return "";
+  },
+};
+
+/**
+ * Process JSX to LaTeX using the RendererCore
+ * @param {Object} element - JSX element to process
+ * @returns {string} - LaTeX content
+ */
+function processJSXToLatex(element) {
+  return rendererCore.renderWithVisitor(element, latexVisitor);
+}
 
 /**
  * Helper function to visualize JSX tree structure by following type property
@@ -83,39 +131,29 @@ function visualizeJSXTree(element, depth = 0, visited = new Set()) {
   return result;
 }
 
-/**
- * Render element to custom output using a visitor
- * This abstracts the visitor pattern implementation details
- */
-function renderWithVisitor(element, visitor) {
-  return rendererCore.renderWithVisitor(element, visitor, {
-    middleware: pluginManager.applyMiddleware.bind(pluginManager),
-  });
-}
-
 // Convenience functions for different output formats
 function renderToLatex(element) {
-  console.log("Rendering to LaTeX", element);
-  console.log("JSX Tree Structure:");
-  console.log(visualizeJSXTree(element));
-  const visitor = new LatexVisitor();
-  return renderWithVisitor(element, visitor);
+  // console.log("Rendering to LaTeX", element);
+  // console.log("JSX Tree Structure:");
+  // console.log(visualizeJSXTree(element));
+
+  return processJSXToLatex(element);
 }
 
 function renderToHtml(element) {
-  const visitor = new HtmlVisitor();
-  return renderWithVisitor(element, visitor);
+  // TODO: Implement HTML rendering without visitor
+  return processJSXToLatex(element);
 }
 
 function renderToEnhancedLatex(element) {
-  const visitor = new EnhancedLatexVisitor();
-  return renderWithVisitor(element, visitor);
+  // TODO: Implement enhanced LaTeX rendering without visitor
+  return processJSXToLatex(element);
 }
 
 // Plugin-aware render function
 function renderWithPlugin(element, visitorName) {
-  const visitor = pluginManager.getVisitor(visitorName);
-  return renderWithVisitor(element, visitor);
+  // TODO: Implement plugin rendering without visitor
+  return processJSXToLatex(element);
 }
 
 // Plugin management functions
@@ -135,7 +173,6 @@ module.exports = {
   renderToLatex,
   renderToHtml,
   renderToEnhancedLatex,
-  renderWithVisitor,
   renderWithPlugin,
   registerPlugin,
   getAvailableVisitors,
@@ -143,4 +180,5 @@ module.exports = {
   pluginManager,
   rendererCore,
   visualizeJSXTree,
+  processJSXToLatex,
 };

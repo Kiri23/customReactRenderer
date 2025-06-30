@@ -7,36 +7,58 @@ function toLatexString(value) {
   if (typeof value === "string" || typeof value === "number")
     return String(value);
   if (Array.isArray(value)) return value.map(toLatexString).join("");
+
+  // Don't convert JSX elements to string - let them be processed by the visitor
+  if (typeof value === "object" && value.$$typeof) {
+    return value; // Return the JSX element as-is
+  }
+
+  // For other objects, convert to string
   if (typeof value === "object") {
     return String(value);
   }
   return String(value);
 }
 
-// Tagged template function para crear componentes LaTeX
+// Tagged template function pura para crear componentes LaTeX
 function latex(strings, ...interpolations) {
-  const Component = (props) => {
-    // Retornar un elemento React válido en lugar de null
-    return React.createElement("latex-component", {
-      __latexTemplate: Component.__latexTemplate,
+  return (props) => {
+    const contentParts = [];
+
+    strings.forEach((str, i) => {
+      if (str) contentParts.push(str);
+
+      if (i < interpolations.length) {
+        let value = interpolations[i];
+        let evaluated = typeof value === "function" ? value(props) : value;
+
+        // Si es un array, expandirlo
+        if (Array.isArray(evaluated)) {
+          contentParts.push(...evaluated);
+        } else if (
+          typeof evaluated === "object" &&
+          evaluated &&
+          evaluated.$$typeof
+        ) {
+          // Para elementos JSX, agregarlos tal cual
+          contentParts.push(evaluated);
+        } else {
+          // Para otros valores, convertir a string
+          evaluated = toLatexString(evaluated);
+          if (evaluated) contentParts.push(evaluated);
+        }
+      }
+    });
+
+    // Crear un componente React con el contenido LaTeX como children
+    return React.createElement("latex-text", {
       ...props,
+      children: contentParts.length === 1 ? contentParts[0] : contentParts,
     });
   };
-
-  // Agregar el template LaTeX como propiedad del componente
-  Component.__latexTemplate = (props) => {
-    return strings.reduce((acc, str, i) => {
-      let value = interpolations[i];
-      let evaluated = typeof value === "function" ? value(props) : value;
-      evaluated = toLatexString(evaluated);
-      return acc + str + (evaluated ?? "");
-    }, "");
-  };
-
-  return Component;
 }
 
-// Componentes usando tagged templates
+// Componentes usando tagged templates puros
 const Document = latex`
 \\documentclass{article}
 \\usepackage{amsmath}

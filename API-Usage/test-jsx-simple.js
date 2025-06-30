@@ -10,10 +10,10 @@ try {
   console.log("Rendering JSX component to LaTeX...");
   const latexOutput = renderToLatex(<TikZJSXExample />);
 
-  // console.log("✅ LaTeX generated successfully!");
-  // console.log("=".repeat(60));
-  // console.log(latexOutput);
-  // console.log("=".repeat(60));
+  console.log("✅ LaTeX generated successfully!");
+  console.log("=".repeat(60));
+  console.log(latexOutput);
+  console.log("=".repeat(60));
 
   // Save to file
   fs.writeFileSync("test-output/jsx-simple.tex", latexOutput);
