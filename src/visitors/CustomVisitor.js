@@ -54,26 +54,33 @@ class CustomVisitor extends BaseVisitor {
     // Handle React elements (function components)
     if (node && node.$$typeof && node.type) {
       if (typeof node.type === "function") {
-        // Check if it's a tagged template component
-        if (node.type.__latexTemplate) {
-          // Process children first
-          const children = node.props.children || [];
-          const childResults = Array.isArray(children)
-            ? children.map((child) => this.visit(child, context))
-            : [this.visit(children, context)];
+        // Process children first
+        const children = node.props.children || [];
+        const childResults = Array.isArray(children)
+          ? children.map((child) => this.visit(child, context))
+          : [this.visit(children, context)];
 
-          // Then process the component
-          return this.visitElement(
-            node.type,
-            node.props,
-            childResults,
-            context,
-          );
+        // Create props with processed children
+        const processedProps = {
+          ...node.props,
+          children: childResults.join(""),
+        };
+
+        // Now execute the component with processed props
+        const result = node.type(processedProps);
+
+        // If it returns a string, it's a tagged template component
+        if (typeof result === "string") {
+          return result;
         }
 
-        // For regular function components, render them first
-        const rendered = node.type(node.props);
-        return this.visit(rendered, context);
+        // If it returns a React element, process it
+        if (result && result.$$typeof) {
+          return this.visit(result, context);
+        }
+
+        // For other return types, process as before
+        return this.visit(result, context);
       }
 
       if (node.type === React.Fragment) {
@@ -82,6 +89,14 @@ class CustomVisitor extends BaseVisitor {
           ? fragChildren.map((child) => this.visit(child, context)).join("")
           : this.visit(fragChildren, context);
       }
+
+      // For other element types, use the mapping
+      const children = node.props.children || [];
+      const childResults = Array.isArray(children)
+        ? children.map((child) => this.visit(child, context))
+        : [this.visit(children, context)];
+
+      return this.visitElement(node.type, node.props, childResults, context);
     }
 
     // Fall back to parent implementation for other cases

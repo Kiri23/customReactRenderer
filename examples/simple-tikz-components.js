@@ -1,8 +1,7 @@
 const React = require("react");
-const { useLatexConfig } = require("../contexts/LatexConfigContext");
 
-// Importar la función latex desde LatexComponents
-const { latex } = require("./LatexComponents");
+// Importar la función latex desde simple-latex-components
+const { latex } = require("./simple-latex-components");
 
 // Basic TikZ shapes using tagged templates
 const TikZCircle = latex`\\draw${(props) =>
@@ -55,35 +54,6 @@ const TikZAxis = latex`\\draw${(props) =>
 ) => props.ymin}) -- (0,${(props) => props.ymax}) node[above] {$y$};
 `;
 
-// Complex TikZ diagrams
-const TikZFlowchart = latex`
-\\begin{tikzpicture}[node distance=2cm]
-${(props) => props.children}
-\\end{tikzpicture}
-
-`;
-
-const TikZFlowchartNode = latex`\\node${(props) =>
-  props.options && props.options.trim() ? `[${props.options}]` : ""}[${(
-  props,
-) => {
-  const shape = props.shape;
-  return shape === "circle"
-    ? "circle"
-    : shape === "diamond"
-    ? "diamond"
-    : "rectangle";
-}}, draw] at (${(props) => props.x},${(props) => props.y}) {${(props) =>
-  props.text}};
-`;
-
-const TikZFlowchartArrow = latex`\\draw${(props) =>
-  props.options && props.options.trim() ? `[${props.options}]` : ""} (${(
-  props,
-) => props.from[0]},${(props) => props.from[1]}) -- (${(props) =>
-  props.to[0]},${(props) => props.to[1]});
-`;
-
 // TikZ Diagram container
 const TikZDiagram = latex`
 \\begin{figure}[h]
@@ -95,17 +65,7 @@ ${(props) => props.children}
 
 `;
 
-// Conditional TikZ components
-const ConditionalTikZ = ({ children, ...props }) => {
-  const { isVisible } = useLatexConfig();
-  if (!isVisible("showDiagrams")) {
-    return null;
-  }
-  return React.createElement("tikzdiagram", { ...props }, children);
-};
-
 module.exports = {
-  // Basic shapes
   TikZCircle,
   TikZRectangle,
   TikZLine,
@@ -113,13 +73,5 @@ module.exports = {
   TikZNode,
   TikZGrid,
   TikZAxis,
-
-  // Complex diagrams
-  TikZFlowchart,
-  TikZFlowchartNode,
-  TikZFlowchartArrow,
-
-  // Containers
   TikZDiagram,
-  ConditionalTikZ,
 };
