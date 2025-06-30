@@ -14,6 +14,14 @@ Cuando te menciones que quiero hacer brainstomrm o vamos a pensar esta idea o so
 
 Cuando te menciones que quiero hacer brainstomrm no solo apruebes mi idea, piensa en la mejor manera de resolver el problema, y critica mi idea.
 
+## JSX Expressiveness Rules
+- NEVER forget the expressiveness and readability of JSX
+- JSX provides clear, hierarchical structure that is easy to understand
+- Tagged Templates should create JSX, NOT generate LaTeX directly
+- The goal is to write LaTeX using JSX syntax for better readability
+- Maintain the JSX → LaTeX transformation pipeline for expressiveness
+- JSX allows for nested structures, props, and dynamic content with composing components in a readable way
+
 ## Testing Rules
 - ALWAYS write tests when adding new features to ensure nothing breaks
 - Run existing tests after any code changes to verify functionality
