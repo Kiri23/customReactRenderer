@@ -137,38 +137,36 @@ const CircuitDiagramExample = () => React.createElement(
 
 // Main TikZ examples document
 const TikZExamplesDocument = ({ initialConfig = {} }) => {
-  const config = {
-    showDiagrams: true,
-    showMath: true,
-    showTables: true,
-    showLists: true,
-    showExamples: true,
-    showAbstract: true,
-    showKeywords: true,
-    showReferences: true,
-    ...initialConfig
-  };
+  // const config = {
+  //   showDiagrams: true,
+  //   showMath: true,
+  //   showTables: true,
+  //   showLists: true,
+  //   showExamples: true,
+  //   showAbstract: true,
+  //   showKeywords: true,
+  //   showReferences: true,
+  //   ...initialConfig
+  // };
 
   return React.createElement(
-    LatexConfigProvider,
-    { config },
+    // LatexConfigProvider,
+    // { config },
+    Document,
+    null,
     React.createElement(
-      Document,
-      null,
+      Section,
+      { title: "TikZ Diagrams Examples" },
       React.createElement(
-        Section,
-        { title: "TikZ Diagrams Examples" },
-        React.createElement(
-          Paragraph,
-          null,
-          "This document demonstrates various TikZ diagrams that can be rendered in Overleaf. Each section shows different types of diagrams created using React components."
-        )
-      ),
-      React.createElement(GeometricShapesExample),
-      React.createElement(FlowchartExample),
-      React.createElement(MathematicalDiagramExample),
-      React.createElement(CircuitDiagramExample)
-    )
+        Paragraph,
+        null,
+        "This document demonstrates various TikZ diagrams that can be rendered in Overleaf. Each section shows different types of diagrams created using React components."
+      )
+    ),
+    React.createElement(GeometricShapesExample),
+    React.createElement(FlowchartExample),
+    React.createElement(MathematicalDiagramExample),
+    React.createElement(CircuitDiagramExample)
   );
 };
 

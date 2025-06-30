@@ -3,6 +3,9 @@ const React = require("react");
 // Base class for element visitors - can be extended for different output formats
 class BaseElementVisitor {
   visit(node, context = {}) {
+    if (node == null) {
+      return "";
+    }
     if (typeof node === "string") {
       return this.visitText(node, context);
     }

@@ -3,7 +3,7 @@ const { ReactLatexVisitor } = require('../src/renderers/ReactLatex');
 const TikZExamplesDocument = require('./TikZExamples');
 
 // Example using the existing TikZExamplesDocument with the new API
-console.log('=== TikZ Examples with ReactLatexVisitor() ===');
+console.log('=== TikZ Examples with ReactLatexVisitor() eyey ===');
 const tikzOutput = ReactLatexVisitor(<TikZExamplesDocument />);
 console.log(tikzOutput);
 

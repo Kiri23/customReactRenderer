@@ -21,5 +21,7 @@ Cuando te menciones que quiero hacer brainstomrm no solo apruebes mi idea, piens
 
 Use JSX whenever possible, but keep the original React.createElement version for the index.js file. Use uppercase first letter for the components name.
 
+EVITA EL USO DE REACT CREACTE ELEMENT PARA CREAR COMPONENTES, USAR TAGGED TEMPLATES.
+
 
 

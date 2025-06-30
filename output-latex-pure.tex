@@ -1,0 +1,25 @@
+
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\begin{document}
+
+
+\section{TikZ Diagram Test}
+
+This is a test paragraph with a TikZ diagram below.
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1]
+\draw[fill=blue!20, draw=blue, thick] (2,3) circle (1.5cm);\draw[fill=red!20, draw=red] (1,1) rectangle (4,3);\draw[thick, green] (0,0) -- (4,4);\node[above] at (2,3.5) {Test Circle};\node[above] at (2.5,2) {Rectangle};
+\end{tikzpicture}
+\caption{Test diagram created with tagged templates}
+\end{figure}
+
+
+
+\end{document}
