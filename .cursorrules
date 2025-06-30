@@ -23,5 +23,8 @@ Use JSX whenever possible, but keep the original React.createElement version for
 
 EVITA EL USO DE REACT CREACTE ELEMENT PARA CREAR COMPONENTES, USAR TAGGED TEMPLATES.
 
+el script test-tikz-simple.js es un ejemplo de como se puede usar tagged templates para crear componentes TikZ.
+
+Se puede correr desde pacakge.json usando el comando yarn example:tikz-simple el cual transpila el JSX a JS y lo ejecuta.
 
 

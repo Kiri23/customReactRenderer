@@ -16,9 +16,11 @@ function toLatexString(value) {
 // Tagged template function para crear componentes LaTeX
 function latex(strings, ...interpolations) {
   const Component = (props) => {
-    // Retornar null para evitar recursión infinita
-    // El visitor se encargará de procesar este componente
-    return null;
+    // Retornar un elemento React válido en lugar de null
+    return React.createElement("latex-component", {
+      __latexTemplate: Component.__latexTemplate,
+      ...props,
+    });
   };
 
   // Agregar el template LaTeX como propiedad del componente

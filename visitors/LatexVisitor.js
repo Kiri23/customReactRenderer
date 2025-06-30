@@ -252,6 +252,23 @@ ${childResults.join("")}
     return `\\draw${opt} (${flowFrom[0]},${flowFrom[1]}) -- (${flowTo[0]},${flowTo[1]});
 `;
   }
+
+  visitElement(type, props, childResults, context) {
+    // Handle latex-component type for JSX support
+    if (type === "latex-component") {
+      return props.__latexTemplate({
+        ...props,
+        children: childResults.join(""),
+      });
+    }
+
+    // Default behavior - delegate to specific visitor methods
+    const visitorMethod = `visit${this.capitalizeFirst(type)}`;
+    if (this[visitorMethod]) {
+      return this[visitorMethod](props, childResults, context);
+    }
+    return childResults.join("");
+  }
 }
 
 module.exports = LatexVisitor;

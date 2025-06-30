@@ -103,12 +103,11 @@ const LatexRenderer = Reconciler(hostConfig);
 // Enhanced render function with plugin support
 function renderWithVisitor(element, visitor) {
   const container = { children: [] };
-  // These two lines are the key to the whole thing. This is where react apply the logics the elements and return the JSX for 
+  // These two lines are the key to the whole thing. This is where react apply the logics the elements and return the JSX for
   // the custom renderer to "renderer"
   // The idea is then use a tree stucture and traverse it and emmit what you want as render output
   const node = LatexRenderer.createContainer(container, 0, false, null);
   LatexRenderer.updateContainer(element, node, null, null);
-
 
   // ------------------------------------------------------------
   //    This can be abstracted away since this is a "implementation detail"
@@ -199,6 +198,8 @@ const configs = {
   },
 };
 
+// Commented out automatic execution - uncomment to run examples
+/*
 console.log("=== Generating documents with different visitors ===\n");
 
 // Generate LaTeX documents
@@ -278,6 +279,7 @@ console.log(enhancedOutput.substring(0, 800) + "...");
 
 console.log("\n=== Sample output (TikZ HTML document) ===");
 console.log(htmlOutput.substring(0, 500) + "...");
+*/
 
 // Export plugin management functions
 module.exports = {
